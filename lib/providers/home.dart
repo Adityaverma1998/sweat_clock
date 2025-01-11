@@ -9,6 +9,32 @@ class Home with ChangeNotifier {
   int restMin = 0;
   int totalSec = 0;
   int totalWorkout =3;
+  int currentWorkoutStage = 1;
+
+  bool isRestComplete = false;
+  bool isPrepComplete = false;
+  bool isWorkComplete = false;
+
+  void changeIsRestComplete(){
+    isRestComplete = !isRestComplete;
+         notifyListeners();
+
+  }
+  void changeIsPrepComplete(){
+    isPrepComplete = !isPrepComplete;
+         notifyListeners();
+
+  }
+  void changeIsWorkoutComplete(){
+    isWorkComplete = !isWorkComplete;
+         notifyListeners();
+
+  }
+  void changeCurrentWorkStage(){
+    currentWorkoutStage++;
+         notifyListeners();
+
+  }
 
   void changeWorkoutSec(int value) {
     workoutSec = value;
