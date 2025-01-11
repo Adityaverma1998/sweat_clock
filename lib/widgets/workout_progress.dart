@@ -2,48 +2,63 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class WorkoutProgress extends StatefulWidget {
   final int sec;
   final String workoutType;
   final Color color;
-  const WorkoutProgress(
-      {super.key,
-      required this.sec,
-      required this.workoutType,
-      required this.color});
 
-   @override
-   _WorkoutProgressState createState() => _WorkoutProgressState();
+  const WorkoutProgress({
+    super.key,
+    required this.sec,
+    required this.workoutType,
+    required this.color,
+  });
+
+  @override
+  _WorkoutProgressState createState() => _WorkoutProgressState();
 }
 
- class _WorkoutProgressState extends State<WorkoutProgress>{
+class _WorkoutProgressState extends State<WorkoutProgress>
+    with SingleTickerProviderStateMixin {
   late AudioPlayer player;
-
   late int currentSec;
   late Timer _timer;
-  bool _isBlinking = false;
+  late AnimationController _animationController;
+  late Animation<double> _bounceAnimation;
 
   @override
   void initState() {
     super.initState();
-    currentSec = widget.sec; 
-        player = AudioPlayer();
+    currentSec = widget.sec;
+    player = AudioPlayer();
 
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async{
+    _bounceAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (currentSec > 1) {
         setState(() {
           currentSec--;
         });
-        if(currentSec<=3){
-          await player.play(AssetSource('audio/count_down.mp3')); 
-            // await player.play(UrlSource('https://example.com/my-audio.wav'));
 
+        if (currentSec <= 3) {
+          await player.play(AssetSource('audio/count_down.mp3'));
+          _animationController.forward(); 
+          _animationController.repeat(reverse: true);
         }
       } else {
-        _timer.cancel(); 
+        _timer.cancel();
+        _animationController.stop(); 
       }
     });
   }
@@ -51,12 +66,10 @@ class WorkoutProgress extends StatefulWidget {
   @override
   void dispose() {
     _timer.cancel();
-    super.dispose();
+    _animationController.dispose();
     player.dispose();
+    super.dispose();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +81,11 @@ class WorkoutProgress extends StatefulWidget {
         fit: StackFit.expand,
         children: [
           CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation(widget.color),
+            valueColor: AlwaysStoppedAnimation(
+                currentSec > 3 ? widget.color : Colors.red),
             backgroundColor: Colors.white,
             strokeWidth: 12,
-            value: currentSec > 0 ? currentSec / widget.sec : 0, 
+            value: currentSec > 0 ? currentSec / widget.sec : 0,
           ),
           Center(
             child: Column(
@@ -86,18 +100,24 @@ class WorkoutProgress extends StatefulWidget {
                     color: widget.color,
                   ),
                 ),
-                SizedBox(height: 8), 
-                AnimatedOpacity(
-                  opacity: _isBlinking ? 0.0 : 1.0, // Control blinking effect
-                  duration: Duration(milliseconds: 500),
-                  child: Text(
-                    '$currentSec', // Display current seconds
-                    style: TextStyle(
-                      fontSize: 150,
-                      fontWeight: FontWeight.bold,
-                      color: widget.color,
-                    ),
-                  ),
+                const SizedBox(height: 8),
+                AnimatedBuilder(
+                  animation: _bounceAnimation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: currentSec <= 3
+                          ? _bounceAnimation.value
+                          : 1.0, 
+                      child: Text(
+                        '$currentSec',
+                        style: TextStyle(
+                          fontSize: 150,
+                          fontWeight: FontWeight.bold,
+                          color: currentSec > 3 ? Colors.black : Colors.red,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
