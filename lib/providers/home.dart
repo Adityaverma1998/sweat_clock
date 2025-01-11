@@ -8,73 +8,81 @@ class Home with ChangeNotifier {
   int restSec = 0;
   int restMin = 0;
   int totalSec = 0;
-  int totalWorkout =3;
+  int totalWorkout = 3;
   int currentWorkoutStage = 1;
 
   bool isRestComplete = false;
-  bool isPrepComplete = false;
+  bool isPrepComplete = true;
   bool isWorkComplete = false;
 
-  void changeIsRestComplete(){
+  void changeAllValues() {
+    isRestComplete = false;
+    isPrepComplete = false;
+    isWorkComplete = false;
+    notifyListeners();
+  }
+
+  void changeIsRestComplete() {
     isRestComplete = !isRestComplete;
-         notifyListeners();
-
+    notifyListeners();
   }
-  void changeIsPrepComplete(){
+
+  void changeIsPrepComplete() {
     isPrepComplete = !isPrepComplete;
-         notifyListeners();
-
+    notifyListeners();
   }
-  void changeIsWorkoutComplete(){
+
+  void changeIsWorkoutComplete() {
     isWorkComplete = !isWorkComplete;
-         notifyListeners();
 
+    notifyListeners();
   }
-  void changeCurrentWorkStage(){
-    currentWorkoutStage++;
-         notifyListeners();
 
+  void changeCurrentWorkStage() {
+    currentWorkoutStage++;
+    notifyListeners();
   }
 
   void changeWorkoutSec(int value) {
     workoutSec = value;
     _updateTotalSec();
-     notifyListeners();
+    notifyListeners();
   }
+
   void changeTotalWorkout(int value) {
     totalWorkout = value;
-    
-     notifyListeners();
+
+    notifyListeners();
   }
 
   void changeWorkoutMin(int value) {
     workoutMin = value;
     _updateTotalSec();
-     notifyListeners();
+    notifyListeners();
   }
 
   void changePrepSec(int value) {
     prepSec = value;
     _updateTotalSec();
-     notifyListeners();
+    notifyListeners();
   }
 
   void changePrepMin(int value) {
     prepMin = value;
     _updateTotalSec();
-     notifyListeners();
+    notifyListeners();
   }
 
   void changeRestSec(int value) {
     restSec = value;
     _updateTotalSec();
-     notifyListeners();
+    notifyListeners();
   }
 
   void changeRestMin(int value) {
     restMin = value;
     _updateTotalSec();
-     notifyListeners();
+    notifyListeners();
   }
 
   void _updateTotalSec() {
@@ -84,7 +92,7 @@ class Home with ChangeNotifier {
         (prepMin * 60) +
         restSec +
         (restMin * 60);
-    notifyListeners(); 
+    notifyListeners();
   }
 
   // Reset all values

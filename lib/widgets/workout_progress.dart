@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stop_watch/providers/home.dart';
 
 class WorkoutProgress extends StatefulWidget {
   final int sec;
@@ -23,13 +26,14 @@ class _WorkoutProgressState extends State<WorkoutProgress>
     with SingleTickerProviderStateMixin {
   late AudioPlayer player;
   late int currentSec;
-  late Timer _timer;
+  Timer? _timer;
   late AnimationController _animationController;
   late Animation<double> _bounceAnimation;
 
   @override
   void initState() {
     super.initState();
+    
     currentSec = widget.sec;
     player = AudioPlayer();
 
@@ -45,6 +49,10 @@ class _WorkoutProgressState extends State<WorkoutProgress>
       ),
     );
 
+    _startTimer();
+  }
+
+  void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (currentSec > 1) {
         setState(() {
@@ -52,20 +60,43 @@ class _WorkoutProgressState extends State<WorkoutProgress>
         });
 
         if (currentSec <= 3) {
-          await player.play(AssetSource('audio/count_down.mp3'));
-          _animationController.forward(); 
+          await player.play(AssetSource('audios/count_down.mp3'));
+          _animationController.forward();
           _animationController.repeat(reverse: true);
         }
       } else {
-        _timer.cancel();
-        _animationController.stop(); 
+        _handleWorkoutCompletion();
       }
     });
   }
 
+  void _handleWorkoutCompletion() {
+    final home = Provider.of<Home>(context, listen: false);
+    log("check value ${home.currentWorkoutStage}   ::   ${home.totalWorkout}  :: ${home.currentWorkoutStage != home.totalWorkout} ");
+    if (home.currentWorkoutStage == home.totalWorkout) {
+      home.changeAllValues();
+    } else {
+      if (widget.workoutType == 'Ready') {
+        home.changeIsWorkoutComplete();
+        home.changeIsPrepComplete();
+      } else if (widget.workoutType == 'Work') {
+        home.changeIsRestComplete();
+        home.changeIsWorkoutComplete();
+        home.changeCurrentWorkStage();
+      } else if (widget.workoutType == 'Rest') {
+        home.changeIsWorkoutComplete();
+        home.changeIsRestComplete();
+      }
+    }
+
+    _timer?.cancel();
+    _animationController.stop();
+    _animationController.reset();
+  }
+
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     _animationController.dispose();
     player.dispose();
     super.dispose();
@@ -93,7 +124,7 @@ class _WorkoutProgressState extends State<WorkoutProgress>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  widget.workoutType,
+                  widget.workoutType.toUpperCase(),
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -105,9 +136,7 @@ class _WorkoutProgressState extends State<WorkoutProgress>
                   animation: _bounceAnimation,
                   builder: (context, child) {
                     return Transform.scale(
-                      scale: currentSec <= 3
-                          ? _bounceAnimation.value
-                          : 1.0, 
+                      scale: currentSec <= 3 ? _bounceAnimation.value : 1.0,
                       child: Text(
                         '$currentSec',
                         style: TextStyle(

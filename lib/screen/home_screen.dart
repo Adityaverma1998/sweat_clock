@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stop_watch/providers/home.dart';
-import 'package:stop_watch/screen/timmer_screen.dart';
+import 'package:stop_watch/screen/timer_screen.dart';
 import 'package:stop_watch/widgets/set_time_bottom_sheet.dart';
 import 'package:stop_watch/widgets/workout_list.dart';
 
@@ -69,9 +69,9 @@ class HomeScreen extends StatelessWidget {
                     Text('${home.totalSec}'),
                     ElevatedButton(onPressed: (){
                   Navigator.push(context, 
-                  MaterialPageRoute(builder: (context)=> TimmerScreen()));
+                  MaterialPageRoute(builder: (context)=> const TimerScreen()));
                   
-                }, child: Text("Set Time"))
+                }, child: const Text("Set Time"))
                   ],
                 )
               ],
