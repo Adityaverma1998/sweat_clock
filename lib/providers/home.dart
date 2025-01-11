@@ -8,10 +8,16 @@ class Home with ChangeNotifier {
   int restSec = 0;
   int restMin = 0;
   int totalSec = 0;
+  int totalWorkout =3;
 
   void changeWorkoutSec(int value) {
     workoutSec = value;
     _updateTotalSec();
+     notifyListeners();
+  }
+  void changeTotalWorkout(int value) {
+    totalWorkout = value;
+    
      notifyListeners();
   }
 

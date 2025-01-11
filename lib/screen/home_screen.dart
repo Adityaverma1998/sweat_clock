@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     Center(
                       child: Text(
-                        "Total Workout: 5",
+                        "Total Workout: ${home.totalWorkout}",
                         style: TextStyle(fontSize: 24.0),
                       ),
                     ),
