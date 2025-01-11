@@ -73,7 +73,7 @@ class _WorkoutProgressState extends State<WorkoutProgress>
   void _handleWorkoutCompletion() {
     final home = Provider.of<Home>(context, listen: false);
     log("check value ${home.currentWorkoutStage}   ::   ${home.totalWorkout}  :: ${home.currentWorkoutStage != home.totalWorkout} ");
-    if (home.currentWorkoutStage == home.totalWorkout) {
+    if (home.currentWorkoutStage > home.totalWorkout) {
       home.changeAllValues();
     } else {
       if (widget.workoutType == 'Ready') {

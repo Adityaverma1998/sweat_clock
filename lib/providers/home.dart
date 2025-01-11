@@ -8,7 +8,7 @@ class Home with ChangeNotifier {
   int restSec = 0;
   int restMin = 0;
   int totalSec = 0;
-  int totalWorkout = 3;
+  int totalWorkout = 1;
   int currentWorkoutStage = 1;
 
   bool isRestComplete = false;

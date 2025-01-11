@@ -3,11 +3,17 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stop_watch/providers/home.dart';
+import 'package:stop_watch/screen/congratulation_screen.dart';
 import 'package:stop_watch/widgets/workout_progress.dart';
 
-class TimerScreen extends StatelessWidget {
+class TimerScreen extends StatefulWidget {
   const TimerScreen({super.key});
 
+  @override
+  _TimerScreenState createState() => _TimerScreenState();
+}
+
+class _TimerScreenState extends State<TimerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +24,14 @@ class TimerScreen extends StatelessWidget {
 
   Widget _buildTimer(BuildContext context) {
     final home = Provider.of<Home>(context);
+
+    if (home.isPrepComplete == false && home.isRestComplete == false && home.isWorkComplete == false) {
+      Future.delayed(Duration.zero, () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>  CongratulationScreen(),
+        ));
+      });
+    }
 
     return Column(
       children: [
@@ -54,7 +68,7 @@ class TimerScreen extends StatelessWidget {
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
-          )
+          ),
       ],
     );
   }
