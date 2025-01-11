@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:stop_watch/screen/home_screen.dart';
 
 class CongratulationScreen extends StatelessWidget {
   final AudioPlayer player = AudioPlayer();
@@ -51,8 +52,11 @@ class CongratulationScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(
-                    context); // Optional: Go back to the previous screen
+                // Navigator.pop(
+                //     context); 
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (contex)=> const HomeScreen())
+                );
               },
               child: const Text('Go Back'),
             ),
