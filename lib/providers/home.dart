@@ -9,43 +9,42 @@ class Home with ChangeNotifier {
   int restMin = 0;
   int totalSec = 0;
 
-  // Update workout seconds
   void changeWorkoutSec(int value) {
     workoutSec = value;
     _updateTotalSec();
+     notifyListeners();
   }
 
-  // Update workout minutes
   void changeWorkoutMin(int value) {
     workoutMin = value;
     _updateTotalSec();
+     notifyListeners();
   }
 
-  // Update preparation seconds
   void changePrepSec(int value) {
     prepSec = value;
     _updateTotalSec();
+     notifyListeners();
   }
 
-  // Update preparation minutes
   void changePrepMin(int value) {
     prepMin = value;
     _updateTotalSec();
+     notifyListeners();
   }
 
-  // Update rest seconds
   void changeRestSec(int value) {
     restSec = value;
     _updateTotalSec();
+     notifyListeners();
   }
 
-  // Update rest minutes
   void changeRestMin(int value) {
     restMin = value;
     _updateTotalSec();
+     notifyListeners();
   }
 
-  // Recalculate total seconds
   void _updateTotalSec() {
     totalSec = workoutSec +
         (workoutMin * 60) +
@@ -53,7 +52,7 @@ class Home with ChangeNotifier {
         (prepMin * 60) +
         restSec +
         (restMin * 60);
-    notifyListeners(); // Notify listeners after recalculation
+    notifyListeners(); 
   }
 
   // Reset all values

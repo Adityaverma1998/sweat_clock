@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stop_watch/providers/home.dart';
 import 'package:stop_watch/widgets/set_time_bottom_sheet.dart';
 import 'package:stop_watch/widgets/workout_list.dart';
 
@@ -7,12 +9,16 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final home = Provider.of<Home>(context);
+
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(),
         body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Row(
                   children: [
@@ -31,9 +37,9 @@ class HomeScreen extends StatelessWidget {
                 ),
                 WorkoutListTile(
                   title: 'Prep Time',
-                  time: '00:10',
+                  time: '${home.prepMin} : ${home.prepSec} ',
                   onTap: () {
-                    showTimePickerBottomSheet(context);
+                    showTimePickerBottomSheet(context, 'prep');
                   },
                 ),
                 const SizedBox(
@@ -41,17 +47,30 @@ class HomeScreen extends StatelessWidget {
                 ),
                 WorkoutListTile(
                   title: 'Workout Time',
-                  time: '00:10',
-                  onTap: () {},
+                  time: '${home.workoutMin} : ${home.workoutSec} ',
+                  onTap: () {
+                    showTimePickerBottomSheet(context, 'workout');
+                  },
                 ),
                 const SizedBox(
                   height: 8.0,
                 ),
                 WorkoutListTile(
                   title: 'Rest Time',
-                  time: '00:10',
-                  onTap: () {},
+                  time: '${home.restMin} : ${home.restSec} ',
+                  onTap: () {
+                    showTimePickerBottomSheet(context, 'rest');
+                  },
                 ),
+
+                Column(
+                  children: [
+                    Text('${home.totalSec}'),
+                    ElevatedButton(onPressed: (){
+                  Navigator.pop(context);
+                }, child: Text("Set Time"))
+                  ],
+                )
               ],
             )),
       ),
