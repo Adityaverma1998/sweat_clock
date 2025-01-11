@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -18,6 +19,7 @@ class WorkoutProgress extends StatefulWidget {
 }
 
  class _WorkoutProgressState extends State<WorkoutProgress>{
+  late AudioPlayer player;
 
   late int currentSec;
   late Timer _timer;
@@ -27,12 +29,19 @@ class WorkoutProgress extends StatefulWidget {
   void initState() {
     super.initState();
     currentSec = widget.sec; 
+        player = AudioPlayer();
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (currentSec > 4) {
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async{
+      if (currentSec > 1) {
         setState(() {
           currentSec--;
         });
+        if(currentSec<=3){
+          await player.play(AssetSource('audio/count_down.mp3')); 
+            // await player.play(UrlSource('https://example.com/my-audio.wav'));
+
+        }
       } else {
         _timer.cancel(); 
       }
@@ -43,7 +52,10 @@ class WorkoutProgress extends StatefulWidget {
   void dispose() {
     _timer.cancel();
     super.dispose();
+    player.dispose();
   }
+
+
 
 
   @override
