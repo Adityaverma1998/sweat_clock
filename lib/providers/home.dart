@@ -17,7 +17,7 @@ class Home with ChangeNotifier {
 
   bool isRestComplete = false;
   bool isPrepComplete = true;
-  bool isWorkComplete = true;
+  bool isWorkComplete = false;
    
   void changeIsWorkoutPaused(bool value) {
     isWorkoutPaused =value;
@@ -28,6 +28,7 @@ class Home with ChangeNotifier {
     isRestComplete = false;
     isPrepComplete = false;
     isWorkComplete = false;
+    currentWorkoutStage =1;
     notifyListeners();
   }
 

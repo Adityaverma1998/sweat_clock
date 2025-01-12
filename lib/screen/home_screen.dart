@@ -59,12 +59,14 @@ class _TotalWorkoutTile extends StatelessWidget {
             color: Color(0xFF303134),
             borderRadius: BorderRadius.all(Radius.circular(8.0))),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+             const Spacer(),
             Text(
               "Total Workout: ${home.totalWorkout}",
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 24.0,
+                fontSize: 20.0,
                 color: Color(0xFFDDDDE1),
               ),
             ),
@@ -91,7 +93,7 @@ class WorkoutDetails extends StatelessWidget {
         WorkoutListTile(
           title: 'Prep Time',
           time: '${home.prepMin} : ${home.prepSec}',
-          onTap: () => showTimePickerBottomSheet(context, 'prep'),
+          onTap: () => showTimePickerBottomSheet(context, 'preparation'),
         ),
         const SizedBox(height: 8.0),
         WorkoutListTile(

@@ -65,7 +65,6 @@ class _WorkoutProgressState extends State<WorkoutProgress>
       return;
     }
 
-
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (!homeProvider.isWorkoutPaused) {
         _ticker();
@@ -81,32 +80,48 @@ class _WorkoutProgressState extends State<WorkoutProgress>
       }
     });
   }
+void _ticker() async {
+  if (currentSec >= 1) {
+    // Determine which value to use for the audio
+    int audioSecond = homeProvider.currentWorkoutStage == homeProvider.totalWorkout
+        ? showCurrentSec
+        : currentSec;
 
-  void _ticker() async {
-    if (currentSec >= 1) {
-      if (currentSec == 1) {
-        showCurrentSec = showCurrentSec;
-        currentSec--;
-      } else {
-        setState(() {
-          currentSec--;
-          showCurrentSec--;
-        });
-      }
-
-      if (currentSec <= 3) {
-        if (homeProvider.isWorkComplete || homeProvider.isRestComplete) {
-          await player.play(AssetSource('audios/rest.mp3'));
-        } else if (homeProvider.isRestComplete) {
-          await player.play(AssetSource('audios/go.mp3'));
-        }
-        _animationController.forward();
-        _animationController.repeat(reverse: true);
-      }
+    if (currentSec == 1) {
+      showCurrentSec = showCurrentSec; 
+      currentSec--;
     } else {
-      _handleWorkoutCompletion();
+      setState(() {
+        currentSec--;
+        showCurrentSec--;
+      });
     }
+
+    _playAudio(audioSecond);
+  } else {
+    _handleWorkoutCompletion();
   }
+}
+
+void _playAudio(int currSec) async {
+  if (currSec > 4) return;
+
+  log('Current second: $currSec');
+  log('Workout complete: ${homeProvider.isWorkComplete}, Rest complete: ${homeProvider.isRestComplete}, Prep complete: ${homeProvider.isPrepComplete}');
+
+  if (homeProvider.isWorkComplete) {
+    log('Playing rest audio');
+    await player.play(AssetSource('audios/rest.mp3'));
+  } else if (homeProvider.isRestComplete || homeProvider.isPrepComplete) {
+    log('Playing go audio');
+    await player.play(AssetSource('audios/go.mp3'));
+  }
+
+  // Start animations
+  _animationController.forward();
+  _animationController.repeat(reverse: true);
+}
+
 
   void _handleWorkoutCompletion() {
     if (homeProvider.currentWorkoutStage > homeProvider.totalWorkout) {

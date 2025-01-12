@@ -11,7 +11,7 @@ void showTimePickerBottomSheet(BuildContext context, String timerType) {
   int selectedSec = secValues[0];
   final home = context.read<Home>();
 
-  if (timerType == "prep") {
+  if (timerType == "preparation") {
     selectedMin = home.prepMin;
     selectedSec = home.prepSec;
   } else if (timerType == "workout") {
@@ -33,7 +33,7 @@ void showTimePickerBottomSheet(BuildContext context, String timerType) {
             children: <Widget>[
               const SizedBox(height: 20),
               Text(
-                '$timerType Time',
+               ' ${timerType.toUpperCase()} TIME',
                 style: const TextStyle(
                     color: Color(0xFFDDDDE1),
                     fontSize: 24,
@@ -64,7 +64,7 @@ void showTimePickerBottomSheet(BuildContext context, String timerType) {
                             setState(() {
                               selectedMin = minValues[index];
                             });
-                            if (timerType == "prep") {
+                            if (timerType == "preparation") {
                               home.changePrepMin(selectedMin);
                             } else if (timerType == "workout") {
                               home.changeWorkoutMin(selectedMin);
@@ -105,7 +105,7 @@ void showTimePickerBottomSheet(BuildContext context, String timerType) {
                               selectedSec = secValues[index];
                             });
                             final home = context.read<Home>();
-                            if (timerType == "prep") {
+                            if (timerType == "preparation") {
                               home.changePrepSec(selectedSec);
                             } else if (timerType == "workout") {
                               home.changeWorkoutSec(selectedSec);
