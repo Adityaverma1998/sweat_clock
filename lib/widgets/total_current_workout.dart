@@ -38,36 +38,38 @@ class _TotalCurrentWorkoutState extends State<TotalCurrentWorkout>
         return SizedBox(
           width: MediaQuery.of(context).size.width * 0.9,
           height: 10,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: homeProvider.totalWorkout,
-            itemBuilder: (context, index) {
-              bool isSelected = homeProvider.currentWorkoutStage == index+1;
-
-              return AnimatedBuilder(
-                animation: _opacityAnimation,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: isSelected ? _opacityAnimation.value : 1.0,
-                    child: Container(
-                      width: 36.0,
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: isSelected ? Colors.green : Colors.red,
-                            width: 4.0,
+          child: Center(
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: homeProvider.totalWorkout,
+              itemBuilder: (context, index) {
+                bool isSelected = homeProvider.currentWorkoutStage == index+1;
+            
+                return AnimatedBuilder(
+                  animation: _opacityAnimation,
+                  builder: (context, child) {
+                    return Opacity(
+                      opacity: isSelected ? _opacityAnimation.value : 1.0,
+                      child: Container(
+                        width: 36.0,
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: isSelected ? Colors.green : Colors.red,
+                              width: 4.0,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              );
-            },
-            separatorBuilder: (context, index) {
-              return const SizedBox(width: 8.0);
-            },
+                    );
+                  },
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const SizedBox(width: 8.0);
+              },
+            ),
           ),
         );
       },

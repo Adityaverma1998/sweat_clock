@@ -42,15 +42,20 @@ class TimerScreen extends StatelessWidget {
     }
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: 12.0),
-       Center(child: TotalCurrentWorkout()),
-        SizedBox(height: 12.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:[
+           TotalCurrentWorkout()
+        ]),
+        Spacer(),
         _buildWorkoutProgress(home),
-        SizedBox(height: 12.0),
+        Spacer(),
         _buildPauseAndResume(context),
+        SizedBox(height: 24.0),
       ],
     );
   }
@@ -116,37 +121,35 @@ class TimerScreen extends StatelessWidget {
   }
 
   Widget _buildPauseAndResume(BuildContext context) {
-  return Consumer<Home>(
-    builder: (context, homeProvider, child) {
-      // Checking if the workout is paused
-      bool isPaused = homeProvider.isWorkoutPaused;
+    return Consumer<Home>(
+      builder: (context, homeProvider, child) {
+        // Checking if the workout is paused
+        bool isPaused = homeProvider.isWorkoutPaused;
 
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            height: 100, 
-            width: 100,  
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle, 
-              color: Colors.blue,     
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: 100,
+              width: 100,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.blue,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  homeProvider.changeIsWorkoutPaused(!isPaused);
+                },
+                icon: isPaused
+                    ? const Icon(Icons.play_arrow)
+                    : const Icon(Icons.pause),
+                iconSize: 50,
+                color: Colors.white,
+              ),
             ),
-            child: IconButton(
-              onPressed: () {
-                homeProvider.changeIsWorkoutPaused(!isPaused);
-              },
-              icon: isPaused
-                  ? const Icon(Icons.play_arrow)
-                  : const Icon(Icons.pause),
-              iconSize: 50, 
-              color: Colors.white, 
-            ),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-
+          ],
+        );
+      },
+    );
+  }
 }

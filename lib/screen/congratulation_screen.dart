@@ -24,7 +24,7 @@ class CongratulationScreen extends StatelessWidget {
   }
 
   void playAudio() async {
-    await player.play(AssetSource('audios/congratulation.mp3'));
+    await player.play(AssetSource('audios/congrat.mp3'));
   }
 
   Widget _buildCongratulationScreen(BuildContext context) {
@@ -35,9 +35,20 @@ class CongratulationScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Lottie.asset('assets/lotties/success.json',
+          
+
+             Stack(
+              children: <Widget>[
+                Lottie.asset('assets/lotties/success.json',
                 height: MediaQuery.of(context).size.height * 0.6,
                 animate: true),
+                 Lottie.asset('assets/lotties/winner.json',
+                 
+                height: MediaQuery.of(context).size.height * 0.6,
+                animate: true),
+
+              ],
+             ),
             const SizedBox(height: 20),
             const Text(
               'Congratulations! You have successfully completed the workout!',

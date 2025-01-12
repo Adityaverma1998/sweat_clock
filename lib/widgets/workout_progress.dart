@@ -82,13 +82,17 @@ class _WorkoutProgressState extends State<WorkoutProgress>
   }
 
   void _ticker() async {
-    if (currentSec > 1) {
+    if (currentSec >= 1) {
       setState(() {
         currentSec--;
       });
 
       if (currentSec <= 3) {
-        await player.play(AssetSource('audios/count_down.mp3'));
+        if (homeProvider.isWorkComplete || homeProvider.isRestComplete) {
+          await player.play(AssetSource('audios/go.mp3'));
+        } else if(homeProvider.isRestComplete){
+          await player.play(AssetSource('audios/rest.mp3'));
+        }
         _animationController.forward();
         _animationController.repeat(reverse: true);
       }
@@ -105,9 +109,14 @@ class _WorkoutProgressState extends State<WorkoutProgress>
         homeProvider.changeIsWorkoutComplete(true);
         homeProvider.changeIsPrepComplete(false);
       } else if (widget.workoutType == 'Work') {
-        homeProvider.changeIsRestComplete(true);
-        homeProvider.changeIsWorkoutComplete(false);
-        homeProvider.changeCurrentWorkStage();
+        if (homeProvider.totalWorkout == homeProvider.currentWorkoutStage) {
+          homeProvider.changeIsRestComplete(false);
+          homeProvider.changeCurrentWorkStage();
+        } else {
+          homeProvider.changeIsRestComplete(true);
+          homeProvider.changeIsWorkoutComplete(false);
+          homeProvider.changeCurrentWorkStage();
+        }
       } else if (widget.workoutType == 'Rest') {
         homeProvider.changeIsWorkoutComplete(true);
         homeProvider.changeIsRestComplete(false);
