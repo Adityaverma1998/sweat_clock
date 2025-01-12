@@ -4,10 +4,8 @@ import 'package:stop_watch/providers/home.dart';
 import 'package:stop_watch/screen/home_screen.dart';
 
 void showAlertDialog(BuildContext context) {
-  // Access the provider with listen: false to avoid unnecessary rebuilds
   final homeProvider = Provider.of<Home>(context, listen: false);
 
-  // Set up the buttons
   Widget cancelButton = TextButton(
     child: const Text("Cancel"),
     onPressed: () {
@@ -17,30 +15,36 @@ void showAlertDialog(BuildContext context) {
   Widget continueButton = TextButton(
     child: const Text("Ok"),
     onPressed: () {
-      // Change the state through the provider
       homeProvider.changeIsPrepComplete(true);
       homeProvider.changeIsWorkoutComplete(false);
       homeProvider.changeIsRestComplete(false);
 
-      Navigator.pop(context); // Close the dialog
-      Navigator.of(context).pop(); // Go back one screen
+      Navigator.pop(context); 
+      Navigator.of(context).pop(); 
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => const HomeScreen(), // Push new screen
+        builder: (context) => const HomeScreen(), 
       ));
     },
   );
 
-  // Set up the AlertDialog
   AlertDialog alert = AlertDialog(
-    title: const Text("Confirmation"),
-    content: const Text("Are you sure you want to stop your Training?"),
+    backgroundColor: const Color(0xFF202023),
+    title: const Text("Confirmation",style: TextStyle(
+      fontSize: 20,fontWeight:FontWeight.bold,
+      color:Color(0xFFDDDDE1)
+    ),),
+    content: const Text("Are you sure you want to stop your Training?",
+    style: TextStyle(
+      fontSize: 20,fontWeight:FontWeight.w400,
+      color:Color(0xFFDDDDE1)
+    ),
+    ),
     actions: [
       cancelButton,
       continueButton,
     ],
   );
 
-  // Show the dialog
   showDialog(
     context: context,
     builder: (BuildContext context) {

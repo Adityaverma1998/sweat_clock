@@ -1,29 +1,31 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stop_watch/providers/home.dart';
 import 'package:stop_watch/widgets/custom_button.dart';
 
 void totalWorkoutBottomSheet(BuildContext context) {
-  List<int> noOfWorkout = List.generate(20, (index) => index);
+  List<int> noOfWorkout = List.generate(20, (index ) => index +1 );
 
   showModalBottomSheet(
+    backgroundColor: const Color(0xFF202023),
     context: context,
-    isScrollControlled: true, 
+    isScrollControlled: true,
     builder: (builder) {
       return Consumer<Home>(
         builder: (context, homeProvider, child) {
           return Container(
             height: MediaQuery.of(context).size.height * 0.5,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                 const SizedBox(height: 20),
+                const SizedBox(height: 20),
                 const Text(
                   "Select Total Workout",
                   style: TextStyle(
+                    color: Color(0xFFDDDDE1),
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -35,9 +37,10 @@ void totalWorkoutBottomSheet(BuildContext context) {
                     itemCount: noOfWorkout.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        tileColor: homeProvider.totalWorkout == noOfWorkout[index]
-                            ? Colors.grey[300]
-                            : Colors.transparent,
+                        tileColor:
+                            homeProvider.totalWorkout == noOfWorkout[index]
+                                ? const Color(0xFF29292D)
+                                : Colors.transparent,
                         onTap: () {
                           homeProvider.changeTotalWorkout(noOfWorkout[index]);
                         },
@@ -45,7 +48,7 @@ void totalWorkoutBottomSheet(BuildContext context) {
                           '${noOfWorkout[index]}',
                           style: const TextStyle(
                             fontSize: 18,
-                            color: Colors.black,
+                            color: Color(0xFFDDDDE1),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -60,7 +63,7 @@ void totalWorkoutBottomSheet(BuildContext context) {
                     Navigator.pop(context);
                   },
                 ),
-                 const SizedBox(height: 12),
+                const SizedBox(height: 12),
               ],
             ),
           );

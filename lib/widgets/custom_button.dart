@@ -16,11 +16,11 @@ class CustomButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
           ),
           side: const BorderSide(
-            color: Colors.blue, 
+            color:  Color(0xFF7C4DFF), 
             width: 2, 
           ),
-          backgroundColor: Colors.blue, 
-          foregroundColor: Colors.white, 
+          backgroundColor: const Color(0xFF7C4DFF), 
+          foregroundColor: const Color(0xFF7C4DFF), 
           padding: const EdgeInsets.symmetric(
             vertical: 14, 
             horizontal: 24,
@@ -30,6 +30,7 @@ class CustomButton extends StatelessWidget {
         child: Text(
           name,
           style: const TextStyle(
+            color:Color(0xFFFFFFFF),
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),

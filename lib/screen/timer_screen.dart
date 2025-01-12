@@ -14,11 +14,17 @@ class TimerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: const Color(0xFF151515),
       appBar: AppBar(
-        title: const Text('SweatClock'),
+          backgroundColor: const Color(0xFF151515),
+       title: const Text("SweatClock",
+          style: TextStyle(
+              color: Color(0xFFFFFFFF),
+              fontSize: 32,
+              fontWeight: FontWeight.bold)),
         centerTitle: false,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back,color: Color(0xFFDDDDE1),),
           onPressed: () {
             showAlertDialog(context);
           },
@@ -44,14 +50,16 @@ class TimerScreen extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
       children: [
         SizedBox(height: 12.0),
+       
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children:[
            TotalCurrentWorkout()
         ]),
-        Spacer(),
+         Spacer(),
         _buildWorkoutProgress(home),
         Spacer(),
         _buildPauseAndResume(context),
@@ -81,7 +89,7 @@ class TimerScreen extends StatelessWidget {
         key: const ValueKey('Work'),
         sec: home.workoutMin * 60 + home.workoutSec,
         workoutType: 'Work',
-        color: Colors.green,
+        color: const Color(0xFF7C4DFF),
       );
     } else {
       return const Text(
@@ -134,7 +142,7 @@ class TimerScreen extends StatelessWidget {
               width: 100,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.blue,
+                color: Color(0xFF7C4DFF),
               ),
               child: IconButton(
                 onPressed: () {

@@ -14,6 +14,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: const Color(0xFF151515),
         appBar: _buildAppBar(),
         body: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
@@ -34,8 +35,13 @@ class HomeScreen extends StatelessWidget {
 
   AppBar _buildAppBar() {
     return AppBar(
+      backgroundColor: const Color(0xFF151515),
       centerTitle: false,
-      title: const Text("SweatClock"),
+      title: const Text("SweatClock",
+          style: TextStyle(
+              color: Color(0xFFFFFFFF),
+              fontSize: 32,
+              fontWeight: FontWeight.bold)),
     );
   }
 }
@@ -47,15 +53,25 @@ class _TotalWorkoutTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => totalWorkoutBottomSheet(context),
-      child: Row(
-        children: [
-          Text(
-            "Total Workout: ${home.totalWorkout}",
-            style: const TextStyle(fontSize: 24.0),
-          ),
-          const Spacer(),
-          const Icon(Icons.keyboard_arrow_right_rounded),
-        ],
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        decoration: const BoxDecoration(
+            color: Color(0xFF303134),
+            borderRadius: BorderRadius.all(Radius.circular(8.0))),
+        child: Row(
+          children: [
+            Text(
+              "Total Workout: ${home.totalWorkout}",
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
+                color: Color(0xFFDDDDE1),
+              ),
+            ),
+            const Spacer(),
+            const Icon(Icons.keyboard_arrow_right_rounded,color: Color(0xFFDDDDE1),),
+          ],
+        ),
       ),
     );
   }
@@ -104,7 +120,9 @@ class FooterSection extends StatelessWidget {
     return Column(
       children: [
         Text('Total Second to the Workout :  ${home.totalSec}'),
-        SizedBox(height: 8.0,),
+        SizedBox(
+          height: 8.0,
+        ),
         CustomButton(
           name: 'Set Time',
           callback: () {

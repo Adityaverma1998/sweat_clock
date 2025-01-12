@@ -153,7 +153,7 @@ class _WorkoutProgressState extends State<WorkoutProgress>
           CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation(
                 currentSec > 3 ? widget.color : Colors.red),
-            backgroundColor: Colors.white,
+            backgroundColor: const Color(0xFF303134),
             strokeWidth: 12,
             value: currentSec > 0 ? currentSec / widget.sec : 0,
           ),
@@ -181,7 +181,7 @@ class _WorkoutProgressState extends State<WorkoutProgress>
                         style: TextStyle(
                           fontSize: 150,
                           fontWeight: FontWeight.bold,
-                          color: currentSec > 3 ? Colors.black : Colors.red,
+                          color: currentSec > 3 ? Color(0xFF7C4DFF) : Colors.red,
                         ),
                       ),
                     );
