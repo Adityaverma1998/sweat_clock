@@ -77,15 +77,15 @@ class _WorkoutProgressState extends State<WorkoutProgress>
       home.changeAllValues();
     } else {
       if (widget.workoutType == 'Ready') {
-        home.changeIsWorkoutComplete();
-        home.changeIsPrepComplete();
+        home.changeIsWorkoutComplete(true);
+        home.changeIsPrepComplete(false);
       } else if (widget.workoutType == 'Work') {
-        home.changeIsRestComplete();
-        home.changeIsWorkoutComplete();
+        home.changeIsRestComplete(true);
+        home.changeIsWorkoutComplete(false);
         home.changeCurrentWorkStage();
       } else if (widget.workoutType == 'Rest') {
-        home.changeIsWorkoutComplete();
-        home.changeIsRestComplete();
+        home.changeIsWorkoutComplete(true);
+        home.changeIsRestComplete(false);
       }
     }
 

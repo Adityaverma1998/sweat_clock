@@ -76,7 +76,7 @@ class HomeScreen extends StatelessWidget {
                     CustomButton(
                       name: 'Set Time',
                       callback: () {
-                        home.changeIsPrepComplete();
+                        home.changeIsPrepComplete(true);
                         Navigator.push(
                             context,
                             MaterialPageRoute(

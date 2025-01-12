@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stop_watch/providers/home.dart';
 import 'package:stop_watch/screen/congratulation_screen.dart';
+import 'package:stop_watch/widgets/confirmation_modal_box.dart';
 import 'package:stop_watch/widgets/workout_progress.dart';
 
 class TimerScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class _TimerScreenState extends State<TimerScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            showAlertDialog(context);
           },
           tooltip: 'Go Back', 
         ),

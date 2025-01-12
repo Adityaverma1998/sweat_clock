@@ -3,14 +3,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 class Home with ChangeNotifier {
-  int workoutSec = 0;
+  int workoutSec = 20;
   int workoutMin = 0;
-  int prepSec = 0;
+  int prepSec = 10;
   int prepMin = 0;
   int restSec = 0;
-  int restMin = 0;
+  int restMin = 10;
   int totalSec = 0;
-  int totalWorkout = 1;
+  int totalWorkout = 3;
   int currentWorkoutStage = 1;
 
   bool isRestComplete = false;
@@ -24,18 +24,18 @@ class Home with ChangeNotifier {
     notifyListeners();
   }
 
-  void changeIsRestComplete() {
-    isRestComplete = !isRestComplete;
+  void changeIsRestComplete(bool value) {
+    isRestComplete =value;
     notifyListeners();
   }
 
-  void changeIsPrepComplete() {
-    isPrepComplete = !isPrepComplete;
+  void changeIsPrepComplete(bool value) {
+    isPrepComplete = value;
     notifyListeners();
   }
 
-  void changeIsWorkoutComplete() {
-    isWorkComplete = !isWorkComplete;
+  void changeIsWorkoutComplete(bool value) {
+    isWorkComplete =value;
 
     notifyListeners();
   }
