@@ -7,7 +7,7 @@ class Home with ChangeNotifier {
   int workoutMin = 0;
   int prepSec = 10;
   int prepMin = 0;
-  int restSec = 0;
+  int restSec = 10;
   int restMin = 0;
   int totalSec = 10;
   int totalWorkout = 3;
