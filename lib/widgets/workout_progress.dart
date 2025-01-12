@@ -26,6 +26,7 @@ class _WorkoutProgressState extends State<WorkoutProgress>
     with SingleTickerProviderStateMixin {
   late AudioPlayer player;
   late int currentSec;
+  late int showCurrentSec;
   Timer? _timer;
   late AnimationController _animationController;
   late Animation<double> _bounceAnimation;
@@ -36,6 +37,8 @@ class _WorkoutProgressState extends State<WorkoutProgress>
   void initState() {
     super.initState();
     currentSec = widget.sec;
+    showCurrentSec = widget.sec;
+
     player = AudioPlayer();
 
     _animationController = AnimationController(
@@ -54,7 +57,6 @@ class _WorkoutProgressState extends State<WorkoutProgress>
   void didChangeDependencies() {
     super.didChangeDependencies();
     homeProvider = Provider.of<Home>(context, listen: true);
-    log('homeProvider is accessible: ${homeProvider.isWorkoutPaused}');
     _startTimer();
   }
 
@@ -63,7 +65,6 @@ class _WorkoutProgressState extends State<WorkoutProgress>
       return;
     }
 
-    log("check start time here ${homeProvider.isWorkoutPaused}");
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (!homeProvider.isWorkoutPaused) {
@@ -83,15 +84,21 @@ class _WorkoutProgressState extends State<WorkoutProgress>
 
   void _ticker() async {
     if (currentSec >= 1) {
-      setState(() {
+      if (currentSec == 1) {
+        showCurrentSec = showCurrentSec;
         currentSec--;
-      });
+      } else {
+        setState(() {
+          currentSec--;
+          showCurrentSec--;
+        });
+      }
 
       if (currentSec <= 3) {
         if (homeProvider.isWorkComplete || homeProvider.isRestComplete) {
-          await player.play(AssetSource('audios/go.mp3'));
-        } else if(homeProvider.isRestComplete){
           await player.play(AssetSource('audios/rest.mp3'));
+        } else if (homeProvider.isRestComplete) {
+          await player.play(AssetSource('audios/go.mp3'));
         }
         _animationController.forward();
         _animationController.repeat(reverse: true);
@@ -155,7 +162,7 @@ class _WorkoutProgressState extends State<WorkoutProgress>
                 currentSec > 3 ? widget.color : Colors.red),
             backgroundColor: const Color(0xFF303134),
             strokeWidth: 12,
-            value: currentSec > 0 ? currentSec / widget.sec : 0,
+            value: showCurrentSec > 0 ? showCurrentSec / widget.sec : 0,
           ),
           Center(
             child: Column(
@@ -177,11 +184,11 @@ class _WorkoutProgressState extends State<WorkoutProgress>
                     return Transform.scale(
                       scale: currentSec <= 3 ? _bounceAnimation.value : 1.0,
                       child: Text(
-                        '$currentSec',
+                        '$showCurrentSec',
                         style: TextStyle(
                           fontSize: 150,
                           fontWeight: FontWeight.bold,
-                          color: currentSec > 3 ? Color(0xFF7C4DFF) : Colors.red,
+                          color: currentSec > 3 ? widget.color : Colors.red,
                         ),
                       ),
                     );
