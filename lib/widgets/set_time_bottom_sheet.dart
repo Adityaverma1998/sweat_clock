@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stop_watch/providers/home.dart';
+import 'package:stop_watch/widgets/custom_button.dart';
 
 void showTimePickerBottomSheet(BuildContext context, String timerType) {
   List<int> minValues = List.generate(61, (index) => index);
@@ -120,11 +121,9 @@ void showTimePickerBottomSheet(BuildContext context, String timerType) {
                     ),
                   ],
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text("Set Time"))
+                CustomButton(name: "Set Workout", callback: (){
+                    Navigator.pop(context);
+                })
               ],
             ),
           );

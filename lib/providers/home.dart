@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class Home with ChangeNotifier {
@@ -50,9 +52,9 @@ class Home with ChangeNotifier {
   }
 
   void changeTotalWorkout(int value) {
+    log("check it changeTotalWorkout call or not ${value}");
     totalWorkout = value;
-
-    notifyListeners();
+     notifyListeners();
   }
 
   void changeWorkoutMin(int value) {

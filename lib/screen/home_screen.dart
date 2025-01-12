@@ -4,6 +4,7 @@ import 'package:stop_watch/providers/home.dart';
 import 'package:stop_watch/screen/timer_screen.dart';
 import 'package:stop_watch/widgets/custom_button.dart';
 import 'package:stop_watch/widgets/set_time_bottom_sheet.dart';
+import 'package:stop_watch/widgets/total_workout_bottom_sheet.dart';
 import 'package:stop_watch/widgets/workout_list.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -22,17 +23,22 @@ class HomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Row(
-                  children: [
-                    Center(
-                      child: Text(
-                        "Total Workout: ${home.totalWorkout}",
-                        style: TextStyle(fontSize: 24.0),
+                GestureDetector(
+                  onTap: () {
+                    totalWorkoutBottomSheet(context);
+                  },
+                  child: Row(
+                    children: [
+                      Center(
+                        child: Text(
+                          "Total Workout: ${home.totalWorkout}",
+                          style: TextStyle(fontSize: 24.0),
+                        ),
                       ),
-                    ),
-                    Spacer(), // Pushes the icon to the right
-                    Icon(Icons.keyboard_arrow_right_rounded),
-                  ],
+                      Spacer(), // Pushes the icon to the right
+                      Icon(Icons.keyboard_arrow_right_rounded),
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 8.0,
@@ -67,17 +73,10 @@ class HomeScreen extends StatelessWidget {
                 Column(
                   children: [
                     Text('${home.totalSec}'),
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const TimerScreen()));
-                        },
-                        child: const Text("Set Time")),
                     CustomButton(
                       name: 'Set Time',
                       callback: () {
+                        home.changeIsPrepComplete();
                         Navigator.push(
                             context,
                             MaterialPageRoute(

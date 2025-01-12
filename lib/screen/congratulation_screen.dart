@@ -28,8 +28,6 @@ class CongratulationScreen extends StatelessWidget {
   }
 
   Widget _buildCongratulationScreen(BuildContext context) {
-    
-
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -38,7 +36,8 @@ class CongratulationScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Lottie.asset('assets/lotties/success.json',
-                height: MediaQuery.of(context).size.height * 0.6, animate: true),
+                height: MediaQuery.of(context).size.height * 0.6,
+                animate: true),
             const SizedBox(height: 20),
             const Text(
               'Congratulations! You have successfully completed the workout!',
@@ -53,9 +52,10 @@ class CongratulationScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Navigator.pop(
-                //     context); 
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (contex)=> const HomeScreen())
+                //     context);
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (contex) => const HomeScreen()),
+                  (route) => false,
                 );
               },
               child: const Text('Go Back'),

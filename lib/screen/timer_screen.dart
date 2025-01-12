@@ -17,7 +17,17 @@ class _TimerScreenState extends State<TimerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('SweatClock'),
+        centerTitle: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          tooltip: 'Go Back', 
+        ),
+      ),
       body: _buildTimer(context),
     );
   }
@@ -25,10 +35,12 @@ class _TimerScreenState extends State<TimerScreen> {
   Widget _buildTimer(BuildContext context) {
     final home = Provider.of<Home>(context);
 
-    if (home.isPrepComplete == false && home.isRestComplete == false && home.isWorkComplete == false) {
+    if (home.isPrepComplete == false &&
+        home.isRestComplete == false &&
+        home.isWorkComplete == false) {
       Future.delayed(Duration.zero, () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) =>  CongratulationScreen(),
+          builder: (context) => CongratulationScreen(),
         ));
       });
     }
@@ -42,22 +54,22 @@ class _TimerScreenState extends State<TimerScreen> {
         ),
         if (home.isPrepComplete)
           WorkoutProgress(
-            key: ValueKey('Ready'),
-            sec: 10,
+            key: const ValueKey('Ready'),
+            sec: home.prepMin * 60 + home.prepSec,
             workoutType: 'Ready',
             color: Colors.yellow,
           )
         else if (home.isRestComplete)
           WorkoutProgress(
-            key: ValueKey('Rest'),
-            sec: 10,
+            key: const ValueKey('Rest'),
+            sec: home.restMin * 60 + home.restSec,
             workoutType: 'Rest',
             color: Colors.blue,
           )
         else if (home.isWorkComplete)
           WorkoutProgress(
-            key: ValueKey('Work'),
-            sec: 10,
+            key: const ValueKey('Work'),
+            sec: home.workoutMin * 60 + home.workoutSec,
             workoutType: 'Work',
             color: Colors.green,
           )
