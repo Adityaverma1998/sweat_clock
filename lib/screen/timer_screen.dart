@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:stop_watch/providers/home.dart';
 import 'package:stop_watch/screen/congratulation_screen.dart';
 import 'package:stop_watch/widgets/confirmation_modal_box.dart';
+import 'package:stop_watch/widgets/total_current_workout.dart';
 import 'package:stop_watch/widgets/workout_progress.dart';
 
 class TimerScreen extends StatelessWidget {
@@ -41,9 +42,11 @@ class TimerScreen extends StatelessWidget {
     }
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: 12.0),
-        _buildHeader(context),
+       Center(child: TotalCurrentWorkout()),
         SizedBox(height: 12.0),
         _buildWorkoutProgress(home),
         SizedBox(height: 12.0),
