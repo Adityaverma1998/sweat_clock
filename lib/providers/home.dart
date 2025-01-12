@@ -8,14 +8,21 @@ class Home with ChangeNotifier {
   int prepSec = 10;
   int prepMin = 0;
   int restSec = 0;
-  int restMin = 10;
-  int totalSec = 0;
+  int restMin = 0;
+  int totalSec = 10;
   int totalWorkout = 3;
   int currentWorkoutStage = 1;
+   
+   bool isWorkoutPaused = false;
 
   bool isRestComplete = false;
   bool isPrepComplete = true;
-  bool isWorkComplete = false;
+  bool isWorkComplete = true;
+   
+  void changeIsWorkoutPaused(bool value) {
+    isWorkoutPaused =value;
+    notifyListeners();
+  }
 
   void changeAllValues() {
     isRestComplete = false;

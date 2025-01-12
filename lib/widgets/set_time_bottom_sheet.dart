@@ -5,7 +5,7 @@ import 'package:stop_watch/widgets/custom_button.dart';
 
 void showTimePickerBottomSheet(BuildContext context, String timerType) {
   List<int> minValues = List.generate(61, (index) => index);
-  List<int> secValues = List.generate(13, (index) => index * 5);
+  List<int> secValues = List.generate(12, (index) => index + 1 * 5);
 
   int selectedMin = minValues[0];
   int selectedSec = secValues[0];
