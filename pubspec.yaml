@@ -39,6 +39,7 @@ dependencies:
   audioplayers: ^6.1.0
   lottie: ^3.2.0
   flutter_launcher_icons: 0.14.1
+  upgrader: ^11.3.1
 
 dev_dependencies:
   flutter_test:
