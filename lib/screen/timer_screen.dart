@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:stop_watch/providers/home.dart';
 import 'package:stop_watch/screen/congratulation_screen.dart';
 import 'package:stop_watch/widgets/confirmation_modal_box.dart';
+import 'package:stop_watch/widgets/custom_pageroutes.dart';
 import 'package:stop_watch/widgets/total_current_workout.dart';
 import 'package:stop_watch/widgets/workout_progress.dart';
 
@@ -13,36 +14,41 @@ class TimerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
         backgroundColor: const Color(0xFF151515),
-      appBar: AppBar(
+        appBar: AppBar(
           backgroundColor: const Color(0xFF151515),
-       title: const Text("SweatClock",
-          style: TextStyle(
-              color: Color(0xFFFFFFFF),
-              fontSize: 32,
-              fontWeight: FontWeight.bold)),
-        centerTitle: false,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back,color: Color(0xFFDDDDE1),),
-          onPressed: () {
-            showAlertDialog(context);
-          },
-          tooltip: 'Go Back',
+          title: const Text("SweatClock",
+              style: TextStyle(
+                  color: Color(0xFFFFFFFF),
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold)),
+          centerTitle: false,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFFDDDDE1),
+            ),
+            onPressed: () {
+              showAlertDialog(context);
+            },
+            tooltip: 'Go Back',
+          ),
         ),
+        body: _buildTimer(context),
       ),
-      body: _buildTimer(context),
     );
   }
 
   Widget _buildTimer(BuildContext context) {
     final home = Provider.of<Home>(context);
 
-    // Navigate to CongratulationScreen if conditions are met
     if (!home.isPrepComplete && !home.isRestComplete && !home.isWorkComplete) {
       Future.delayed(Duration.zero, () {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => CongratulationScreen(),
+        Navigator.of(context).pushReplacement(customCircularPageRoute(
+          page: CongratulationScreen(),
         ));
       });
     }
@@ -52,23 +58,17 @@ class TimerScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
       children: [
-        SizedBox(height: 12.0),
-       
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:[
-           TotalCurrentWorkout()
-        ]),
-         Spacer(),
+        const SizedBox(height: 12.0),
+        const TotalCurrentWorkout(),
+        const Spacer(),
         _buildWorkoutProgress(home),
-        Spacer(),
+        const Spacer(),
         _buildPauseAndResume(context),
-        SizedBox(height: 24.0),
+        const SizedBox(height: 24.0),
       ],
     );
   }
 
-  // Helper function for handling workout progress
   Widget _buildWorkoutProgress(Home home) {
     if (home.isPrepComplete) {
       return WorkoutProgress(

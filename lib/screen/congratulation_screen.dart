@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:stop_watch/providers/home.dart';
 import 'package:stop_watch/screen/home_screen.dart';
 import 'package:stop_watch/widgets/custom_button.dart';
+import 'package:stop_watch/widgets/custom_pageroutes.dart';
 
 class CongratulationScreen extends StatelessWidget {
   final AudioPlayer player = AudioPlayer();
@@ -18,17 +19,20 @@ class CongratulationScreen extends StatelessWidget {
       playAudio();
     });
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF151515),
-      appBar: AppBar(
-        title: null,
-        leading: null,
-        actions: [],
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: const Color(0xFF151515),
+        appBar: AppBar(
+          title: null,
+          leading: null,
+          actions: [],
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+        ),
+        body: _buildCongratulationScreen(context),
       ),
-      body: _buildCongratulationScreen(context),
     );
   }
 
@@ -65,15 +69,19 @@ class CongratulationScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-           CustomButton(name: 'GO Back', callback: (){
-             final home  = Provider.of<Home>(context, listen: false);
-                home.changeAllValues();
-           
-             Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (contex) => const HomeScreen()),
-                   (route) => false,
-                );
-           })
+            CustomButton(
+                name: 'GO Back',
+                callback: () {
+                  final home = Provider.of<Home>(context, listen: false);
+                  home.changeAllValues();
+
+                  Navigator.of(context).pushAndRemoveUntil(
+                    customCircularPageRoute(
+                      page: const HomeScreen(),
+                    ),
+                    (route) => false,
+                  );
+                })
           ],
         ),
       ),
