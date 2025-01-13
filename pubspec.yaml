@@ -40,6 +40,8 @@ dependencies:
   lottie: ^3.2.0
   flutter_launcher_icons: 0.14.1
   upgrader: ^11.3.1
+  flutter_native_splash: ^2.3.1
+
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +64,11 @@ flutter_icons:
   adaptive_icon_foreground: "assets/images/sweat_logo.png"
   adaptive_icon_background: "#FFFFFF"
 
+
+flutter_native_splash:
+  color: "#202023"
+  image: assets/images/sweat_logo.png
+  
 # The following section is specific to Flutter packages.
 flutter:
 

@@ -68,3 +68,4 @@ Future<bool> closeAppModalBox(BuildContext context) async {
   );
 
   return result; 
+}
