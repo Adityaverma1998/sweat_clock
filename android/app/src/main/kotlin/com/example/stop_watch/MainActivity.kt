@@ -1,4 +1,4 @@
-package com.example.stop_watch
+package com.aditya.tech.stop_watch
 
 import io.flutter.embedding.android.FlutterActivity
 
