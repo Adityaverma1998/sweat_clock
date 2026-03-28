@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stop_watch/core/theme/theme_ext.dart';
 import 'package:stop_watch/providers/home.dart';
 import 'package:stop_watch/screen/timer_screen.dart';
 import 'package:stop_watch/widgets/close_app_modal_box.dart';
-import 'package:stop_watch/widgets/confirmation_modal_box.dart';
 import 'package:stop_watch/widgets/custom_button.dart';
 import 'package:stop_watch/widgets/custom_pageroutes.dart';
 import 'package:stop_watch/widgets/set_time_bottom_sheet.dart';
@@ -15,27 +15,24 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return 
-     WillPopScope(
+    return WillPopScope(
       onWillPop: () async {
         bool shouldPop = await closeAppModalBox(context);
-        
+
         return shouldPop;
       },
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: const Color(0xFF151515),
-          appBar: _buildAppBar(),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+          backgroundColor: context.bgBase,
+          appBar: _buildAppBar(context),
+          body: const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _TotalWorkoutTile(),
-                const SizedBox(height: 8.0),
-                const WorkoutDetails(),
-                const Spacer(),
-                const FooterSection(),
+                WorkoutDetails(),
+                Spacer(),
+                FooterSection(),
               ],
             ),
           ),
@@ -44,9 +41,9 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color(0xFF151515),
+      backgroundColor: context.bgBase,
       centerTitle: false,
       title: const Text(
         "SweatClock",
@@ -113,19 +110,28 @@ class WorkoutDetails extends StatelessWidget {
           title: 'Prep Time',
           time: '${home.prepMin} : ${home.prepSec}',
           onTap: () => showTimePickerBottomSheet(context, 'preparation'),
+          borderColor: context.fabForeground,
+          icon: Icons.ac_unit_outlined,
         ),
-        const SizedBox(height: 8.0),
-        WorkoutListTile(
-          title: 'Workout Time',
-          time: '${home.workoutMin} : ${home.workoutSec}',
-          onTap: () => showTimePickerBottomSheet(context, 'workout'),
-        ),
-        const SizedBox(height: 8.0),
-        WorkoutListTile(
-          title: 'Rest Time',
-          time: '${home.restMin} : ${home.restSec}',
-          onTap: () => showTimePickerBottomSheet(context, 'rest'),
-        ),
+        // WorkoutListTile(
+        //   title: 'Prep Time',
+        //   time: '${home.prepMin} : ${home.prepSec}',
+        //   onTap: () => showTimePickerBottomSheet(context, 'preparation'),
+        //   borderColor: context.fabForeground,
+        //   icon: Icons.ac_unit_outlined,
+        // ),
+        // const SizedBox(height: 8.0),
+        // WorkoutListTile(
+        //   title: 'Workout Time',
+        //   time: '${home.workoutMin} : ${home.workoutSec}',
+        //   onTap: () => showTimePickerBottomSheet(context, 'workout'),
+        // ),
+        // const SizedBox(height: 8.0),
+        // WorkoutListTile(
+        //   title: 'Rest Time',
+        //   time: '${home.restMin} : ${home.restSec}',
+        //   onTap: () => showTimePickerBottomSheet(context, 'rest'),
+        // ),
       ],
     );
   }

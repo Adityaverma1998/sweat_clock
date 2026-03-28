@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" width="72" height="72">
+  <!-- Frame top & bottom bars -->
+  <rect x="14" y="10" width="44" height="6" rx="3" fill="#3D2B1F"/>
+  <rect x="14" y="56" width="44" height="6" rx="3" fill="#3D2B1F"/>
+
+  <!-- Hourglass glass shape (upper) -->
+  <polygon points="15,16 57,16 38,36 34,36" fill="#D4A843"/>
+  <!-- Hourglass glass shape (lower) -->
+  <polygon points="34,36 38,36 57,56 15,56" fill="#F5C842"/>
+
+  <!-- Sand remaining top (small triangle, mostly flowed) -->
+  <polygon points="22,16 50,16 39,30 33,30" fill="#F9D85A"/>
+
+  <!-- Neck pinch highlight -->
+  <ellipse cx="36" cy="36" rx="3" ry="1.5" fill="#C8922A" opacity="0.7"/>
+
+  <!-- Sand pile at bottom -->
+  <polygon points="18,56 54,56 50,44 36,40 22,44" fill="#F9D85A"/>
+
+  <!-- Falling sand stream -->
+  <line x1="36" y1="36" x2="36" y2="42" stroke="#F9D85A" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Shine on glass upper -->
+  <polygon points="20,17 30,17 26,28 22,28" fill="white" opacity="0.15"/>
+  <!-- Shine on glass lower -->
+  <polygon points="20,55 26,42 22,42 16,55" fill="white" opacity="0.1"/>
+</svg>
