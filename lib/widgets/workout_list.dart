@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:stop_watch/core/theme/theme_ext.dart';
 
 class WorkoutListTile extends StatelessWidget {
@@ -6,7 +7,6 @@ class WorkoutListTile extends StatelessWidget {
   final String time;
   final Color borderColor;
   final Widget icon;
-
   final VoidCallback onTap;
 
   const WorkoutListTile({
@@ -22,65 +22,64 @@ class WorkoutListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      // borderRadius: BorderRadius.circular(18),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(18.r),
         child: Ink(
           decoration: BoxDecoration(
             color: context.bgSurface,
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(18.r),
             border: Border.all(color: context.borderSubtle),
           ),
           child: Stack(
             children: [
+              // Left accent bar
               Positioned(
                 left: 0,
                 top: 0,
                 bottom: 0,
                 child: Container(
-                  width: 5,
+                  width: 5.w,
                   color: context.borderStrong,
                 ),
               ),
+
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 18, 18, 18),
+                padding: EdgeInsets.fromLTRB(16.w, 18.h, 18.w, 18.h),
                 child: Row(
                   children: [
-                    // 🎯 ICON BOX
+                    // Icon box
                     Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: context.workoutBg,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: icon),
+                      width: 40.w,
+                      height: 40.h,
+                      decoration: BoxDecoration(
+                        color: context.workoutBg,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: icon,
+                    ),
 
-                    const SizedBox(width: 14),
+                    SizedBox(width: 14.w),
 
-                    // 📝 TEXT SECTION
+                    // Text section
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // SMALL LABEL (like cfg-label)
                           Text(
                             title,
                             style: TextStyle(
-                              fontSize: 14,
-                              letterSpacing: 1.0,
+                              fontSize: 14.sp,
+                              letterSpacing: 1.6,
+                              height: 1.5,
                               fontWeight: FontWeight.w600,
                               color: context.textMuted,
                             ),
                           ),
-
-                          const SizedBox(height: 4),
-
-                          // BIG VALUE (like cfg-val)
+                          // SizedBox(height: 4.h),
                           Text(
                             time,
                             style: TextStyle(
-                              fontSize: 26,
+                              fontSize: 26.sp,
                               fontWeight: FontWeight.w800,
                               color: context.workout,
                             ),
@@ -89,20 +88,18 @@ class WorkoutListTile extends StatelessWidget {
                       ),
                     ),
 
-                    // ➡️ ARROW
+                    // Arrow button
                     Container(
-                      width: 28,
-                      height: 28,
+                      width: 28.w,
+                      height: 28.h,
                       decoration: BoxDecoration(
                         color: context.bgSurface2,
                         shape: BoxShape.circle,
-                        border: Border.all(
-                          color: context.borderSubtle,
-                        ),
+                        border: Border.all(color: context.borderSubtle),
                       ),
                       child: Icon(
                         Icons.arrow_forward_ios_rounded,
-                        size: 12,
+                        size: 12.sp,
                         color: context.textMuted,
                       ),
                     ),

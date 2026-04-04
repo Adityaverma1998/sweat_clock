@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stop_watch/core/constant/app_assets_constant.dart';
 import 'package:stop_watch/core/theme/theme_ext.dart';
 import 'package:stop_watch/providers/home.dart';
 import 'package:stop_watch/screen/timer_screen.dart';
@@ -7,6 +8,7 @@ import 'package:stop_watch/widgets/close_app_modal_box.dart';
 import 'package:stop_watch/widgets/custom_button.dart';
 import 'package:stop_watch/widgets/custom_pageroutes.dart';
 import 'package:stop_watch/widgets/set_time_bottom_sheet.dart';
+import 'package:stop_watch/widgets/svg_widget.dart';
 import 'package:stop_watch/widgets/total_workout_bottom_sheet.dart';
 import 'package:stop_watch/widgets/workout_list.dart';
 
@@ -111,7 +113,7 @@ class WorkoutDetails extends StatelessWidget {
           time: '${home.prepMin} : ${home.prepSec}',
           onTap: () => showTimePickerBottomSheet(context, 'preparation'),
           borderColor: context.fabForeground,
-          icon: Icons.ac_unit_outlined,
+          icon: const SvgWidget(path: AppAssetsConstant.fire),
         ),
         // WorkoutListTile(
         //   title: 'Prep Time',

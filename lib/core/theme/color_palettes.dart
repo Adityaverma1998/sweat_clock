@@ -60,7 +60,7 @@ class AppColors {
 
   // ─── Dark Neutrals ────────────────────────────────────────
   static const Color neutral950 = Color(0xFF060609);
-  static const Color neutral900 = Color(0xFF0D0B16);
+  static const Color neutral900 = Color(0xFF0C0B17);
   static const Color neutral850 = Color(0xFF0E0C17);
   static const Color neutral800 = Color(0xFF121020);
   static const Color neutral750 = Color(0xFF161324);
