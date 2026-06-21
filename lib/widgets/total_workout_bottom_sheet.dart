@@ -47,10 +47,9 @@ class _RoundSelectorSheetState extends State<_RoundSelectorSheet> {
       decoration: BoxDecoration(
         color: context.bgBase,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        border: Border(
-          top: BorderSide(color: context.accentLight.withOpacity(0.2)),
-          left: BorderSide(color: context.accentLight.withOpacity(0.1)),
-          right: BorderSide(color: context.accentLight.withOpacity(0.1)),
+        border: Border.all(
+          color: context.accentLight.withOpacity(0.15),
+          width: 1,
         ),
       ),
       child: Padding(

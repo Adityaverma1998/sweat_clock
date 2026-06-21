@@ -150,10 +150,9 @@ class _TimePickerSheetState extends State<_TimePickerSheet> {
       decoration: BoxDecoration(
         color: context.bgBase,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        border: Border(
-          top: BorderSide(color: color.withOpacity(0.2)),
-          left: BorderSide(color: color.withOpacity(0.1)),
-          right: BorderSide(color: color.withOpacity(0.1)),
+        border: Border.all(
+          color: color.withOpacity(0.15),
+          width: 1,
         ),
       ),
       child: Padding(
