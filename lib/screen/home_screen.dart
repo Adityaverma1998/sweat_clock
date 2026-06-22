@@ -11,8 +11,21 @@ import 'package:stop_watch/widgets/total_workout_bottom_sheet.dart';
 
 import 'package:stop_watch/screen/settings_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+import 'package:stop_watch/core/utils/in_app_update_helper.dart';
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    InAppUpdateHelper.checkForPlayStoreUpdate();
+  }
 
   @override
   Widget build(BuildContext context) {
