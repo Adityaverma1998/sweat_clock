@@ -8,7 +8,8 @@ class CoffeeScreen extends StatefulWidget {
   State<CoffeeScreen> createState() => _CoffeeScreenState();
 }
 
-class _CoffeeScreenState extends State<CoffeeScreen> with SingleTickerProviderStateMixin {
+class _CoffeeScreenState extends State<CoffeeScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _bounceController;
   late Animation<double> _bounceAnimation;
 
@@ -39,7 +40,8 @@ class _CoffeeScreenState extends State<CoffeeScreen> with SingleTickerProviderSt
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimary, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new_rounded,
+              color: context.textPrimary, size: 20),
           style: IconButton.styleFrom(
             backgroundColor: context.bgSurface,
             shape: RoundedRectangleBorder(
@@ -168,7 +170,8 @@ class _CoffeeScreenState extends State<CoffeeScreen> with SingleTickerProviderSt
                             ),
                             const SizedBox(width: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
                                 color: context.accent.withOpacity(0.12),
                                 borderRadius: BorderRadius.circular(6),
@@ -204,7 +207,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> with SingleTickerProviderSt
             _buildCoffeeTier(
               context: context,
               title: 'Small Coffee',
-              price: '\$1.99',
+              price: '\$0.99',
               description: 'Fuel a few coding hours & bug fixes.',
               icon: '☕',
               isBest: false,
@@ -213,7 +216,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> with SingleTickerProviderSt
             _buildCoffeeTier(
               context: context,
               title: 'Coffee & Donut',
-              price: '\$4.99',
+              price: '\$1.99',
               description: 'The sweet spot! Highly appreciated.',
               icon: '🍩',
               isBest: true,
@@ -222,7 +225,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> with SingleTickerProviderSt
             _buildCoffeeTier(
               context: context,
               title: 'Huge Coffee Jar',
-              price: '\$9.99',
+              price: '\$2.99',
               description: 'Supercharger! Fuels major feature updates.',
               icon: '⚡',
               isBest: false,
@@ -233,7 +236,8 @@ class _CoffeeScreenState extends State<CoffeeScreen> with SingleTickerProviderSt
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.security_rounded, color: context.textMuted, size: 16),
+                Icon(Icons.security_rounded,
+                    color: context.textMuted, size: 16),
                 const SizedBox(width: 8),
                 Text(
                   'Processed securely via App Store / Google Play',
@@ -261,7 +265,8 @@ class _CoffeeScreenState extends State<CoffeeScreen> with SingleTickerProviderSt
     required bool isBest,
   }) {
     final bgColor = isBest ? context.coffeeTierBgBest : context.coffeeTierBg;
-    final borderColor = isBest ? context.coffeeTierBorderBest : context.coffeeTierBorder;
+    final borderColor =
+        isBest ? context.coffeeTierBorderBest : context.coffeeTierBorder;
 
     return Container(
       decoration: BoxDecoration(
@@ -324,9 +329,11 @@ class _CoffeeScreenState extends State<CoffeeScreen> with SingleTickerProviderSt
                       SnackBar(
                         content: Row(
                           children: [
-                            const Icon(Icons.coffee_rounded, color: Colors.amber),
+                            const Icon(Icons.coffee_rounded,
+                                color: Colors.amber),
                             const SizedBox(width: 10),
-                            Text('Support tier ($price) is coming soon! Thank you!'),
+                            Text(
+                                'Support tier ($price) is coming soon! Thank you!'),
                           ],
                         ),
                         behavior: SnackBarBehavior.floating,
@@ -334,9 +341,11 @@ class _CoffeeScreenState extends State<CoffeeScreen> with SingleTickerProviderSt
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isBest ? context.accent : context.bgSurface3,
+                    backgroundColor:
+                        isBest ? context.accent : context.bgSurface3,
                     foregroundColor: context.fabForeground,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                     minimumSize: Size.zero,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -358,7 +367,8 @@ class _CoffeeScreenState extends State<CoffeeScreen> with SingleTickerProviderSt
               top: -12,
               right: 20,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [context.accent, context.accentLight],
