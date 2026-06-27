@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stop_watch/screen/timer_screen.dart';
 
 // Function for custom circular page transition
 PageRouteBuilder customCircularPageRoute({
@@ -8,16 +7,13 @@ PageRouteBuilder customCircularPageRoute({
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = 0.0;
-      var end = 1.0;
       var curve = Curves.easeInOut;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      var curvedAnimation = CurvedAnimation(parent: animation, curve: curve);
 
       return AnimatedBuilder(
-        animation: animation,
+        animation: curvedAnimation,
         builder: (context, child) {
-          var radius = animation.value * (MediaQuery.of(context).size.width * 1.5); // Adjust the radius based on screen size
+          var radius = curvedAnimation.value * (MediaQuery.of(context).size.width * 1.5); // Adjust the radius based on screen size
           return ClipPath(
             clipper: CircleClipper(radius),
             child: child,

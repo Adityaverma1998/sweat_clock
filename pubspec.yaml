@@ -30,6 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -44,7 +47,8 @@ dependencies:
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.2.4
   in_app_update: ^4.2.5
-
+  wakelock_plus: ^1.2.8
+  shared_preferences: ^2.3.5
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +89,12 @@ flutter:
     - assets/audios/
     - assets/images/
     - assets/lotties/
+    - assets/audio/en/
+    - assets/audio/hi/
+    - assets/audio/es/
+    - assets/audio/fr/
+    - assets/audio/de/
+    - assets/audio/ja/
    
     
 
