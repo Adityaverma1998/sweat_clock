@@ -1,4 +1,4 @@
-package com.aditya.tech.stop_watch
+package com.aditya.tech.sweat_clock
 
 import io.flutter.embedding.android.FlutterActivity
 
