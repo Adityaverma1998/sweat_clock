@@ -39,6 +39,7 @@ class TimerViewModel with ChangeNotifier {
 
     // Synchronize settings state to services
     audioService.updateEnabled(settingsViewModel.soundEffects);
+    audioService.updateLanguage(settingsViewModel.language);
     vibrationService.updateEnabled(settingsViewModel.vibration);
   }
 
@@ -75,7 +76,7 @@ class TimerViewModel with ChangeNotifier {
     // We countdown in the last 3 seconds of Prep or Rest before Workout starts
     if (_currentPhase == WorkoutPhase.prep || _currentPhase == WorkoutPhase.rest) {
       if (remaining <= 3 && remaining >= 1) {
-        audioService.playCountdown(settingsViewModel.language, '$remaining');
+        audioService.speakCountdown('$remaining');
         if (settingsViewModel.settings.countdownVibration) {
           vibrationService.vibrate();
         }
@@ -121,7 +122,7 @@ class TimerViewModel with ChangeNotifier {
   }
 
   void _playGo() {
-    audioService.playCountdown(settingsViewModel.language, 'go');
+    audioService.speakCountdown('go');
     if (settingsViewModel.settings.countdownVibration) {
       vibrationService.vibrateImpact();
     }
