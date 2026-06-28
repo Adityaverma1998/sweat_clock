@@ -300,9 +300,9 @@ class TimerScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Skip Button
+        // Reset Button
         GestureDetector(
-          onTap: () => viewModel.skipPhase(),
+          onTap: () => viewModel.resetTimer(),
           child: Container(
             width: 48,
             height: 48,
@@ -312,9 +312,9 @@ class TimerScreen extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.skip_next_rounded,
+              Icons.replay_rounded,
               color: context.textPrimary,
-              size: 24,
+              size: 22,
             ),
           ),
         ),
@@ -347,7 +347,25 @@ class TimerScreen extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 72), // Maintain spacing balance
+        const SizedBox(width: 24),
+        // Skip Button
+        GestureDetector(
+          onTap: () => viewModel.skipPhase(),
+          child: Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: context.bgSurface,
+              border: Border.all(color: context.borderSubtle),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.skip_next_rounded,
+              color: context.textPrimary,
+              size: 24,
+            ),
+          ),
+        ),
       ],
     );
   }

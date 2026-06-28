@@ -18,7 +18,11 @@ class SettingsScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimary, size: 20),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: context.textPrimary,
+            size: 20,
+          ),
           style: IconButton.styleFrom(
             backgroundColor: context.bgSurface,
             shape: RoundedRectangleBorder(
@@ -45,92 +49,86 @@ class SettingsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionHeader(context.translate('audio_feel')),
-            _buildSectionContainer(
-              context,
-              [
-                _buildSwitchTile(
-                  context: context,
-                  icon: Icons.volume_up_rounded,
-                  iconColor: Colors.amber,
-                  title: context.translate('sound_effects'),
-                  subtitle: context.translate('sound_effects_desc'),
-                  value: viewModel.soundEffects,
-                  onChanged: (val) => viewModel.toggleSoundEffects(val),
-                ),
-                _buildDivider(context),
-                _buildSwitchTile(
-                  context: context,
-                  icon: Icons.vibration_rounded,
-                  iconColor: Colors.pinkAccent,
-                  title: context.translate('vibration'),
-                  subtitle: context.translate('vibration_desc'),
-                  value: viewModel.vibration,
-                  onChanged: (val) => viewModel.toggleVibration(val),
-                ),
-                _buildDivider(context),
-                _buildSwitchTile(
-                  context: context,
-                  icon: Icons.edgesensor_high_rounded,
-                  iconColor: Colors.deepOrangeAccent,
-                  title: context.translate('countdown_vibration'),
-                  subtitle: context.translate('countdown_vibration_desc'),
-                  value: viewModel.countdownVibration,
-                  onChanged: (val) => viewModel.toggleCountdownVibration(val),
-                ),
-                _buildDivider(context),
-                _buildSwitchTile(
-                  context: context,
-                  icon: Icons.record_voice_over_rounded,
-                  iconColor: Colors.blueAccent,
-                  title: context.translate('voice_cues'),
-                  subtitle: context.translate('voice_cues_desc'),
-                  value: viewModel.voiceCues,
-                  onChanged: (val) => viewModel.toggleVoiceCues(val),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
+            // _buildSectionHeader(context.translate('audio_feel')),
+            // _buildSectionContainer(
+            //   context,
+            //   [
+            //     _buildSwitchTile(
+            //       context: context,
+            //       icon: Icons.volume_up_rounded,
+            //       iconColor: Colors.amber,
+            //       title: context.translate('sound_effects'),
+            //       subtitle: context.translate('sound_effects_desc'),
+            //       value: viewModel.soundEffects,
+            //       onChanged: (val) => viewModel.toggleSoundEffects(val),
+            //     ),
+            //     _buildDivider(context),
+            //     _buildSwitchTile(
+            //       context: context,
+            //       icon: Icons.vibration_rounded,
+            //       iconColor: Colors.pinkAccent,
+            //       title: context.translate('vibration'),
+            //       subtitle: context.translate('vibration_desc'),
+            //       value: viewModel.vibration,
+            //       onChanged: (val) => viewModel.toggleVibration(val),
+            //     ),
+            //     _buildDivider(context),
+            //     _buildSwitchTile(
+            //       context: context,
+            //       icon: Icons.edgesensor_high_rounded,
+            //       iconColor: Colors.deepOrangeAccent,
+            //       title: context.translate('countdown_vibration'),
+            //       subtitle: context.translate('countdown_vibration_desc'),
+            //       value: viewModel.countdownVibration,
+            //       onChanged: (val) => viewModel.toggleCountdownVibration(val),
+            //     ),
+            //     _buildDivider(context),
+            //     _buildSwitchTile(
+            //       context: context,
+            //       icon: Icons.record_voice_over_rounded,
+            //       iconColor: Colors.blueAccent,
+            //       title: context.translate('voice_cues'),
+            //       subtitle: context.translate('voice_cues_desc'),
+            //       value: viewModel.voiceCues,
+            //       onChanged: (val) => viewModel.toggleVoiceCues(val),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 24),
             _buildSectionHeader(context.translate('display')),
-            _buildSectionContainer(
-              context,
-              [
-                _buildSwitchTile(
-                  context: context,
-                  icon: Icons.dark_mode_rounded,
-                  iconColor: Colors.purpleAccent,
-                  title: context.translate('dark_mode'),
-                  subtitle: context.translate('dark_mode_desc'),
-                  value: viewModel.isDarkMode,
-                  onChanged: (val) => viewModel.toggleDarkMode(val),
-                ),
-                _buildDivider(context),
-                _buildSwitchTile(
-                  context: context,
-                  icon: Icons.screen_lock_rotation_rounded,
-                  iconColor: Colors.tealAccent,
-                  title: context.translate('keep_screen_on'),
-                  subtitle: context.translate('keep_screen_on_desc'),
-                  value: viewModel.keepScreenOn,
-                  onChanged: (val) => viewModel.toggleKeepScreenOn(val),
-                ),
-              ],
-            ),
+            _buildSectionContainer(context, [
+              _buildSwitchTile(
+                context: context,
+                icon: Icons.dark_mode_rounded,
+                iconColor: Colors.purpleAccent,
+                title: context.translate('dark_mode'),
+                subtitle: context.translate('dark_mode_desc'),
+                value: viewModel.isDarkMode,
+                onChanged: (val) => viewModel.toggleDarkMode(val),
+              ),
+              _buildDivider(context),
+              _buildSwitchTile(
+                context: context,
+                icon: Icons.screen_lock_rotation_rounded,
+                iconColor: Colors.tealAccent,
+                title: context.translate('keep_screen_on'),
+                subtitle: context.translate('keep_screen_on_desc'),
+                value: viewModel.keepScreenOn,
+                onChanged: (val) => viewModel.toggleKeepScreenOn(val),
+              ),
+            ]),
             const SizedBox(height: 24),
             _buildSectionHeader(context.translate('general')),
-            _buildSectionContainer(
-              context,
-              [
-                _buildNavigationTile(
-                  context: context,
-                  icon: Icons.language_rounded,
-                  iconColor: Colors.greenAccent,
-                  title: context.translate('language'),
-                  value: viewModel.language,
-                  onTap: () => _showLanguageSelector(context, viewModel),
-                ),
-              ],
-            ),
+            _buildSectionContainer(context, [
+              _buildNavigationTile(
+                context: context,
+                icon: Icons.language_rounded,
+                iconColor: Colors.greenAccent,
+                title: context.translate('language'),
+                value: viewModel.language,
+                onTap: () => _showLanguageSelector(context, viewModel),
+              ),
+            ]),
             const SizedBox(height: 40),
 
             // About SweatClock card matching premium aesthetic
@@ -157,7 +155,11 @@ class SettingsScreen extends StatelessWidget {
                       color: context.accent.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.flash_on_rounded, color: context.accent, size: 28),
+                    child: Icon(
+                      Icons.flash_on_rounded,
+                      color: context.accent,
+                      size: 28,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Text(
@@ -193,14 +195,21 @@ class SettingsScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const CoffeeScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const CoffeeScreen(),
+                        ),
                       );
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: context.accent.withOpacity(0.15),
-                        border: Border.all(color: context.accentLight.withOpacity(0.35)),
+                        border: Border.all(
+                          color: context.accentLight.withOpacity(0.35),
+                        ),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -246,9 +255,7 @@ class SettingsScreen extends StatelessWidget {
         side: BorderSide(color: context.borderSubtle),
       ),
       clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: children,
-      ),
+      child: Column(children: children),
     );
   }
 
@@ -280,10 +287,7 @@ class SettingsScreen extends StatelessWidget {
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(
-          color: context.textMuted,
-          fontSize: 12,
-        ),
+        style: TextStyle(color: context.textMuted, fontSize: 12),
       ),
       trailing: Switch.adaptive(
         value: value,
@@ -332,7 +336,11 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Icon(Icons.arrow_forward_ios_rounded, color: context.textMuted, size: 14),
+          Icon(
+            Icons.arrow_forward_ios_rounded,
+            color: context.textMuted,
+            size: 14,
+          ),
         ],
       ),
       tileColor: Colors.transparent,
@@ -340,15 +348,21 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildDivider(BuildContext context) {
-    return Divider(
-      color: context.borderSubtle,
-      height: 1,
-      indent: 56,
-    );
+    return Divider(color: context.borderSubtle, height: 1, indent: 56);
   }
 
-  void _showLanguageSelector(BuildContext context, SettingsViewModel viewModel) {
-    final languages = ['English', 'Español', 'Français', 'Deutsch', '日本語', 'Hindi'];
+  void _showLanguageSelector(
+    BuildContext context,
+    SettingsViewModel viewModel,
+  ) {
+    final languages = [
+      'English',
+      'Español',
+      'Français',
+      'Deutsch',
+      '日本語',
+      'Hindi',
+    ];
 
     showModalBottomSheet(
       context: context,
@@ -387,12 +401,20 @@ class SettingsScreen extends StatelessWidget {
                       title: Text(
                         lang,
                         style: TextStyle(
-                          color: isSelected ? context.accent : context.textPrimary,
-                          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                          color: isSelected
+                              ? context.accent
+                              : context.textPrimary,
+                          fontWeight: isSelected
+                              ? FontWeight.w700
+                              : FontWeight.w500,
                         ),
                       ),
                       trailing: isSelected
-                          ? Icon(Icons.check_rounded, color: context.accent, size: 22)
+                          ? Icon(
+                              Icons.check_rounded,
+                              color: context.accent,
+                              size: 22,
+                            )
                           : null,
                       tileColor: Colors.transparent,
                     );

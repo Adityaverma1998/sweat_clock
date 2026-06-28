@@ -1,5 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../core/localization/localization_ext.dart';
 import '../../../core/theme/theme_ext.dart';
 import '../../viewmodels/home_viewmodel.dart';
@@ -18,6 +22,8 @@ class CongratulationScreen extends StatefulWidget {
 class _CongratulationScreenState extends State<CongratulationScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  final ScreenshotController _screenshotController = ScreenshotController();
+  bool _isSharing = false;
 
   @override
   void initState() {
@@ -55,12 +61,27 @@ class _CongratulationScreenState extends State<CongratulationScreen>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _buildStatsRow(context, homeViewModel),
-                          const SizedBox(height: 30),
-                          _buildTrophyArea(context),
-                          const SizedBox(height: 30),
-                          _buildStreakPill(context),
-                          const SizedBox(height: 40),
+                          // ── Shareable card ──────────────────────────────
+                          Screenshot(
+                            controller: _screenshotController,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: context.bgBase,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                children: [
+                                  _buildStatsRow(context, homeViewModel),
+                                  const SizedBox(height: 30),
+                                  _buildTrophyArea(context),
+                                  const SizedBox(height: 30),
+                                  _buildStreakPill(context),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
                           _buildCoffeeNudge(context),
                           const SizedBox(height: 20),
                           _buildActionButtons(context),
@@ -359,9 +380,7 @@ class _CongratulationScreenState extends State<CongratulationScreen>
         Expanded(
           flex: 1,
           child: OutlinedButton(
-            onPressed: () {
-              // Action triggers
-            },
+            onPressed: _isSharing ? null : _captureAndShare,
             style: OutlinedButton.styleFrom(
               side: BorderSide(color: context.borderDefault),
               padding: const EdgeInsets.symmetric(vertical: 14),
@@ -369,14 +388,31 @@ class _CongratulationScreenState extends State<CongratulationScreen>
                 borderRadius: BorderRadius.circular(14),
               ),
             ),
-            child: Text(
-              "Share",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: context.textSecondary,
-              ),
-            ),
+            child: _isSharing
+                ? SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: context.textSecondary,
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.share_rounded,
+                          size: 16, color: context.textSecondary),
+                      const SizedBox(width: 6),
+                      Text(
+                        "Share",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: context.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ),
         const SizedBox(width: 12),
@@ -416,5 +452,31 @@ class _CongratulationScreenState extends State<CongratulationScreen>
         ),
       ],
     );
+  }
+
+  Future<void> _captureAndShare() async {
+    setState(() => _isSharing = true);
+    try {
+      final imageBytes = await _screenshotController.capture(
+        pixelRatio: 3.0,
+      );
+      if (imageBytes == null) return;
+
+      final tempDir = await getTemporaryDirectory();
+      final file = await File(
+        '${tempDir.path}/sweatclock_workout.png',
+      ).writeAsBytes(imageBytes);
+
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path, mimeType: 'image/png')],
+          text: '🏆 Workout Complete! Crushed it with SweatClock 💪 #SweatClock #Fitness #WorkoutDone',
+        ),
+      );
+    } catch (e) {
+      debugPrint('Share error: $e');
+    } finally {
+      if (mounted) setState(() => _isSharing = false);
+    }
   }
 }

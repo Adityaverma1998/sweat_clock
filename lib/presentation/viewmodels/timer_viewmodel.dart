@@ -99,12 +99,14 @@ class TimerViewModel with ChangeNotifier {
         _currentPhase = WorkoutPhase.completed;
         _secondsRemaining = 0;
         _phaseDuration = 0;
-        audioService.playCongratSound();
+        audioService.speakCongrats();
+        vibrationService.vibrateCongrats();
         _timer?.cancel();
         notifyListeners();
       } else {
         // More rounds remaining -> Go to Rest
-        audioService.playRestSound();
+        audioService.speakRest();
+        vibrationService.vibrateRestStart();
         _currentPhase = WorkoutPhase.rest;
         _phaseDuration = restSeconds;
         _secondsRemaining = _phaseDuration;
@@ -134,8 +136,27 @@ class TimerViewModel with ChangeNotifier {
   }
 
   void skipPhase() {
+    _timer?.cancel();
     _secondsRemaining = 0;
     _transitionToNextPhase();
+    // Restart the tick loop after transition
+    startTimer();
+  }
+
+  /// Restart the entire workout from round 1, prep phase.
+  void resetTimer() {
+    _timer?.cancel();
+    _currentRound = 1;
+    _isPaused = false;
+    _currentPhase = prepSeconds > 0 ? WorkoutPhase.prep : WorkoutPhase.workout;
+    _phaseDuration = prepSeconds > 0 ? prepSeconds : workoutSeconds;
+    _secondsRemaining = _phaseDuration;
+    notifyListeners();
+    startTimer();
+    // If we start directly in workout (no prep), announce Go immediately
+    if (prepSeconds == 0) {
+      _playGo();
+    }
   }
 
   @override

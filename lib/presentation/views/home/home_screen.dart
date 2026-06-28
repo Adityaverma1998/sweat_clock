@@ -10,6 +10,7 @@ import '../../../data/services/vibration_service.dart';
 import '../../widgets/close_app_dialog.dart';
 import '../../widgets/set_time_bottom_sheet.dart';
 import '../../widgets/total_workout_bottom_sheet.dart';
+import '../coffee/coffee_screen.dart';
 import '../settings/settings_screen.dart';
 import '../timer/timer_screen.dart';
 import '../../../core/utils/in_app_update_helper.dart';
@@ -136,32 +137,64 @@ class _HomeScreenState extends State<HomeScreen> {
               color: context.accent,
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsScreen()),
-              );
-            },
-            child: Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: context.bgSurface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: context.borderSubtle),
-                boxShadow: [
-                  BoxShadow(
-                    color: context.shadowColor.withOpacity(0.12),
-                    blurRadius: 24,
-                    offset: const Offset(0, 4),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CoffeeScreen()),
+                  );
+                },
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: context.bgSurface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: context.borderSubtle),
+                    boxShadow: [
+                      BoxShadow(
+                        color: context.shadowColor.withOpacity(0.12),
+                        blurRadius: 24,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                ],
+                  child: const Center(
+                    child: Text('☕', style: TextStyle(fontSize: 16)),
+                  ),
+                ),
               ),
-              child: const Center(
-                child: Text('⚙️', style: TextStyle(fontSize: 16)),
+              const SizedBox(width: 12),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                  );
+                },
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: context.bgSurface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: context.borderSubtle),
+                    boxShadow: [
+                      BoxShadow(
+                        color: context.shadowColor.withOpacity(0.12),
+                        blurRadius: 24,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: const Center(
+                    child: Text('⚙️', style: TextStyle(fontSize: 16)),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),
