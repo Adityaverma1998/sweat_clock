@@ -21,7 +21,7 @@ class AudioService {
     'हिन्दी': 'hi-IN',
   };
 
-  /// Localized words for countdown numbers, "Go", "Rest" and "Congratulations".
+  /// All spoken phrases keyed by locale.
   static const Map<String, Map<String, String>> _words = {
     'en-US': {
       '3': 'three',
@@ -88,7 +88,6 @@ class AudioService {
     _enabled = enabled;
   }
 
-  /// Call this when the user changes language in settings.
   Future<void> updateLanguage(String languageName) async {
     final localeCode = _resolveLocale(languageName);
     if (localeCode != _currentLocale) {
@@ -97,8 +96,29 @@ class AudioService {
     }
   }
 
-  /// Speak a keyed phrase in the current locale.
-  Future<void> _speak(String key) async {
+  // ─────────────────────────────────────────────────────────────────────────
+  // TICK CUE  (3, 2, 1)
+  // Does NOT call stop() first — each number is short (~0.3 s) and the
+  // 1-second gap between ticks is more than enough for it to finish.
+  // Calling stop() here would silence the previous number mid-word.
+  // ─────────────────────────────────────────────────────────────────────────
+  Future<void> speakTick(String number) async {
+    if (!_enabled) return;
+    try {
+      final words = _words[_currentLocale] ?? _words['en-US']!;
+      final word = words[number] ?? number;
+      await _tts.speak(word);
+    } catch (e) {
+      debugPrint("TTS tick error '$number': $e");
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // TRANSITION CUES  (Go / Rest / Congrats)
+  // These follow the countdown (≥1 s after "one") so stopping first is safe
+  // and ensures a clean start without any residual audio.
+  // ─────────────────────────────────────────────────────────────────────────
+  Future<void> _speakCue(String key) async {
     if (!_enabled) return;
     try {
       await _tts.stop();
@@ -106,18 +126,23 @@ class AudioService {
       final word = words[key] ?? key;
       await _tts.speak(word);
     } catch (e) {
-      debugPrint("TTS error speaking '$key': $e");
+      debugPrint("TTS cue error '$key': $e");
     }
   }
 
-  /// Speak the countdown number (3, 2, 1) or "Go".
-  Future<void> speakCountdown(String soundName) => _speak(soundName);
+  Future<void> speakGo() => _speakCue('go');
+  Future<void> speakRest() => _speakCue('rest');
+  Future<void> speakCongrats() => _speakCue('congrats');
 
-  /// Announce "Rest" when entering the rest phase.
-  Future<void> speakRest() => _speak('rest');
+  /// Silence any in-progress speech (used by resetTimer).
+  Future<void> stopSpeaking() async {
+    try {
+      await _tts.stop();
+    } catch (_) {}
+  }
 
-  /// Announce congratulations when the workout is complete.
-  Future<void> speakCongrats() => _speak('congrats');
+  /// Legacy alias kept for resetTimer's _runStartCountdown.
+  Future<void> speakCountdown(String key) => _speakCue(key);
 
   String _resolveLocale(String languageName) {
     final key = languageName.toLowerCase();
