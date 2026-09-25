@@ -25,6 +25,12 @@ class TimerViewModel with ChangeNotifier {
   /// Prevents the same phase-end from triggering a transition more than once.
   bool _isTransitioning = false;
 
+  /// Monotonic stopwatch to eliminate any clock drift across ticks and frame drops.
+  final Stopwatch _phaseStopwatch = Stopwatch();
+
+  /// Tracks which second was cued to prevent duplicate audio/haptic calls.
+  int _lastCuedSecond = -1;
+
   Timer? _timer;
 
   TimerViewModel({
@@ -56,25 +62,33 @@ class TimerViewModel with ChangeNotifier {
 
   void startTimer() {
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    if (!_phaseStopwatch.isRunning && !_isPaused) {
+      _phaseStopwatch.start();
+    }
+    // High-resolution check: 100ms interval for perfect precision without battery drain
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
       if (!_isPaused) _tick();
     });
   }
 
   // ─────────────────────────────────────────────────────────────────────────
   // CORE TICK
-  // Decrement → fire countdown cue if ≤ 3 remaining → trigger transition at 0
+  // Uses Stopwatch elapsed monotonic time for zero drift.
   // ─────────────────────────────────────────────────────────────────────────
   void _tick() {
-    if (_secondsRemaining > 0) {
-      _secondsRemaining--;
+    final elapsedSec = _phaseStopwatch.elapsed.inSeconds;
+    final remaining = (_phaseDuration - elapsedSec).clamp(0, _phaseDuration);
+
+    if (remaining != _secondsRemaining) {
+      _secondsRemaining = remaining;
       notifyListeners();
 
-      // ── Countdown cue: fires during last 3 s of EVERY active phase ──────
-      // Condition: remaining is 3, 2, or 1 (i.e. the phase is about to end).
+      // ── Countdown cue: fires at 3, 2, 1 s ────────────────────────────────
       if (_secondsRemaining >= 1 &&
           _secondsRemaining <= 3 &&
-          _currentPhase != WorkoutPhase.completed) {
+          _currentPhase != WorkoutPhase.completed &&
+          _lastCuedSecond != _secondsRemaining) {
+        _lastCuedSecond = _secondsRemaining;
         audioService.speakTick('$_secondsRemaining');
         if (settingsViewModel.settings.countdownVibration) {
           vibrationService.vibrate();
@@ -83,7 +97,7 @@ class TimerViewModel with ChangeNotifier {
     }
 
     // ── Transition: only once per phase end ──────────────────────────────
-    if (_secondsRemaining == 0 && !_isTransitioning) {
+    if (remaining == 0 && !_isTransitioning) {
       _isTransitioning = true;
       _transitionToNextPhase();
     }
@@ -94,6 +108,10 @@ class TimerViewModel with ChangeNotifier {
   // Each branch announces what is starting next, then updates state.
   // ─────────────────────────────────────────────────────────────────────────
   void _transitionToNextPhase() {
+    _phaseStopwatch.reset();
+    _phaseStopwatch.start();
+    _lastCuedSecond = -1;
+
     if (_currentPhase == WorkoutPhase.prep) {
       // Prep → Workout
       audioService.speakGo();
@@ -112,6 +130,7 @@ class TimerViewModel with ChangeNotifier {
         _currentPhase = WorkoutPhase.completed;
         _secondsRemaining = 0;
         _phaseDuration = 0;
+        _phaseStopwatch.stop();
         audioService.speakCongrats();
         vibrationService.vibrateCongrats();
         _timer?.cancel();
@@ -148,12 +167,19 @@ class TimerViewModel with ChangeNotifier {
   // ─────────────────────────────────────────────────────────────────────────
   void togglePause() {
     _isPaused = !_isPaused;
+    if (_isPaused) {
+      _phaseStopwatch.stop();
+    } else {
+      _phaseStopwatch.start();
+    }
     notifyListeners();
   }
 
   /// Skip current phase immediately (no countdown — it's a manual action).
   void skipPhase() {
     _timer?.cancel();
+    _phaseStopwatch.reset();
+    _lastCuedSecond = -1;
     _isTransitioning = false;
     _secondsRemaining = 0;
     _isTransitioning = true;
@@ -164,6 +190,8 @@ class TimerViewModel with ChangeNotifier {
   /// Restart entire workout from round 1 with an explicit 3→2→1→Go countdown.
   Future<void> resetTimer() async {
     _timer?.cancel();
+    _phaseStopwatch.reset();
+    _lastCuedSecond = -1;
     _isTransitioning = false;
 
     // Silence any leftover speech (e.g. "Rest" from a prior phase)
@@ -200,6 +228,7 @@ class TimerViewModel with ChangeNotifier {
   @override
   void dispose() {
     _timer?.cancel();
+    _phaseStopwatch.stop();
     super.dispose();
   }
 }

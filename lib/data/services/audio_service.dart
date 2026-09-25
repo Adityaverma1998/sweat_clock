@@ -1,10 +1,13 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class AudioService {
+  final AudioPlayer _player = AudioPlayer();
   final FlutterTts _tts = FlutterTts();
   bool _enabled = true;
   String _currentLocale = 'en-US';
+  String _langCode = 'en';
 
   /// TTS locale codes for each supported language name.
   static const Map<String, String> _ttsLocaleMap = {
@@ -21,7 +24,28 @@ class AudioService {
     'हिन्दी': 'hi-IN',
   };
 
-  /// All spoken phrases keyed by locale.
+  /// Asset folder code for each language
+  static const Map<String, String> _langCodeMap = {
+    'english': 'en',
+    'en': 'en',
+    'español': 'es',
+    'spanish': 'es',
+    'es': 'es',
+    'français': 'fr',
+    'french': 'fr',
+    'fr': 'fr',
+    'deutsch': 'de',
+    'german': 'de',
+    'de': 'de',
+    '日本語': 'ja',
+    'japanese': 'ja',
+    'ja': 'ja',
+    'hindi': 'hi',
+    'हिन्दी': 'hi',
+    'hi': 'hi',
+  };
+
+  /// Fallback spoken phrases for TTS keyed by locale.
   static const Map<String, Map<String, String>> _words = {
     'en-US': {
       '3': 'three',
@@ -74,14 +98,32 @@ class AudioService {
   };
 
   AudioService() {
-    _initTts();
+    _initAudio();
   }
 
-  Future<void> _initTts() async {
-    await _tts.setSpeechRate(0.5);
-    await _tts.setVolume(1.0);
-    await _tts.setPitch(1.0);
-    await _tts.setLanguage(_currentLocale);
+  Future<void> _initAudio() async {
+    try {
+      await _player.setReleaseMode(ReleaseMode.stop);
+      // Configure audio session to duck other audio rather than abruptly cutting off user music
+      await AudioPlayer.global.setAudioContext(
+        AudioContextConfig(
+          focus: AudioContextConfigFocus.duckOthers,
+          respectSilence: false,
+          stayAwake: false,
+        ).build(),
+      );
+    } catch (e) {
+      debugPrint("AudioPlayer init error: $e");
+    }
+
+    try {
+      await _tts.setSpeechRate(0.5);
+      await _tts.setVolume(1.0);
+      await _tts.setPitch(1.0);
+      await _tts.setLanguage(_currentLocale);
+    } catch (e) {
+      debugPrint("TTS init error: $e");
+    }
   }
 
   void updateEnabled(bool enabled) {
@@ -89,36 +131,34 @@ class AudioService {
   }
 
   Future<void> updateLanguage(String languageName) async {
-    final localeCode = _resolveLocale(languageName);
+    final key = languageName.toLowerCase();
+    _langCode = _langCodeMap[key] ?? 'en';
+    final localeCode = _ttsLocaleMap[key] ?? 'en-US';
     if (localeCode != _currentLocale) {
       _currentLocale = localeCode;
-      await _tts.setLanguage(_currentLocale);
+      try {
+        await _tts.setLanguage(_currentLocale);
+      } catch (e) {
+        debugPrint("Error updating TTS language: $e");
+      }
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // TICK CUE  (3, 2, 1)
-  // Does NOT call stop() first — each number is short (~0.3 s) and the
-  // 1-second gap between ticks is more than enough for it to finish.
-  // Calling stop() here would silence the previous number mid-word.
-  // ─────────────────────────────────────────────────────────────────────────
-  Future<void> speakTick(String number) async {
+  /// Play audio asset with instant fallback to TTS
+  Future<void> _playAsset(String path, {String? ttsKey}) async {
     if (!_enabled) return;
     try {
-      final words = _words[_currentLocale] ?? _words['en-US']!;
-      final word = words[number] ?? number;
-      await _tts.speak(word);
+      await _player.stop();
+      await _player.play(AssetSource(path));
     } catch (e) {
-      debugPrint("TTS tick error '$number': $e");
+      debugPrint("Asset play failed for '$path': $e. Falling back to TTS.");
+      if (ttsKey != null) {
+        await _speakTts(ttsKey);
+      }
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // TRANSITION CUES  (Go / Rest / Congrats)
-  // These follow the countdown (≥1 s after "one") so stopping first is safe
-  // and ensures a clean start without any residual audio.
-  // ─────────────────────────────────────────────────────────────────────────
-  Future<void> _speakCue(String key) async {
+  Future<void> _speakTts(String key) async {
     if (!_enabled) return;
     try {
       await _tts.stop();
@@ -126,31 +166,50 @@ class AudioService {
       final word = words[key] ?? key;
       await _tts.speak(word);
     } catch (e) {
-      debugPrint("TTS cue error '$key': $e");
+      debugPrint("TTS error '$key': $e");
     }
   }
 
-  Future<void> speakGo() => _speakCue('go');
-  Future<void> speakRest() => _speakCue('rest');
-  Future<void> speakCongrats() => _speakCue('congrats');
+  // ─────────────────────────────────────────────────────────────────────────
+  // COUNTDOWN TICKS  (3, 2, 1)
+  // Plays high quality audio asset: assets/audio/<lang>/<number>.mp3
+  // ─────────────────────────────────────────────────────────────────────────
+  Future<void> speakTick(String number) async {
+    if (!_enabled) return;
+    await _playAsset('audio/$_langCode/$number.mp3', ttsKey: number);
+  }
 
-  /// Silence any in-progress speech (used by resetTimer).
+  // ─────────────────────────────────────────────────────────────────────────
+  // TRANSITION CUES  (Go / Rest / Congrats)
+  // ─────────────────────────────────────────────────────────────────────────
+  Future<void> speakGo() async {
+    if (!_enabled) return;
+    await _playAsset('audio/$_langCode/go.mp3', ttsKey: 'go');
+  }
+
+  Future<void> speakRest() async {
+    if (!_enabled) return;
+    await _playAsset('audios/rest.mp3', ttsKey: 'rest');
+  }
+
+  Future<void> speakCongrats() async {
+    if (!_enabled) return;
+    await _playAsset('audios/congrat.mp3', ttsKey: 'congrats');
+  }
+
+  /// Silence any in-progress sound/speech
   Future<void> stopSpeaking() async {
     try {
+      await _player.stop();
       await _tts.stop();
     } catch (_) {}
   }
 
-  /// Legacy alias kept for resetTimer's _runStartCountdown.
-  Future<void> speakCountdown(String key) => _speakCue(key);
-
-  String _resolveLocale(String languageName) {
-    final key = languageName.toLowerCase();
-    if (key == 'español') return 'es-ES';
-    return _ttsLocaleMap[key] ?? 'en-US';
-  }
+  /// Legacy alias
+  Future<void> speakCountdown(String key) => speakTick(key);
 
   void dispose() {
+    _player.dispose();
     _tts.stop();
   }
 }

@@ -63,6 +63,8 @@ class AppLocalizations {
       'set_time': 'Set Time',
       'set_rounds': 'Set Rounds',
       'done': 'Done',
+      'workout_presets': 'WORKOUT PRESETS',
+      'reset_default': 'Reset to Default',
     },
     'es': {
       'title': 'SweatClock',
@@ -115,6 +117,8 @@ class AppLocalizations {
       'set_time': 'Establecer Tiempo',
       'set_rounds': 'Establecer Rondas',
       'done': 'Listo',
+      'workout_presets': 'RUTINAS PREDETERMINADAS',
+      'reset_default': 'Restablecer',
     },
     'fr': {
       'title': 'SweatClock',
@@ -167,6 +171,8 @@ class AppLocalizations {
       'set_time': 'Régler le Temps',
       'set_rounds': 'Régler les Séries',
       'done': 'Valider',
+      'workout_presets': 'PROGRAMMES RAPIDES',
+      'reset_default': 'Réinitialiser',
     },
     'de': {
       'title': 'SweatClock',
@@ -219,6 +225,8 @@ class AppLocalizations {
       'set_time': 'Zeit einstellen',
       'set_rounds': 'Runden einstellen',
       'done': 'Fertig',
+      'workout_presets': 'SCHNELLE VORLAGEN',
+      'reset_default': 'Zurücksetzen',
     },
     'ja': {
       'title': 'SweatClock',
@@ -271,6 +279,8 @@ class AppLocalizations {
       'set_time': '時間を設定',
       'set_rounds': 'ラウンドを設定',
       'done': '完了',
+      'workout_presets': 'クイックプリセット',
+      'reset_default': 'リセット',
     },
     'hi': {
       'title': 'SweatClock',
@@ -323,6 +333,8 @@ class AppLocalizations {
       'set_time': 'समय सेट करें',
       'set_rounds': 'राउंड सेट करें',
       'done': 'हो गया',
+      'workout_presets': 'क्विक प्रीसेट',
+      'reset_default': 'डिफ़ॉल्ट पर रीसेट करें',
     }
   };
 
