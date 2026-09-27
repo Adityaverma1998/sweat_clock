@@ -83,14 +83,19 @@ class PurchaseViewModel with ChangeNotifier {
   String? get paidTier => _service.paidTier;
   bool get isLoading => _isLoading;
   String? get statusMessage => _statusMessage;
+  bool isProductInStore(String productId) => _service.isProductInStore(productId);
 
-  Future<bool> buyTier(String productId) async {
+  Future<bool> openPlayStore() async {
+    return await _service.openPlayStoreListing();
+  }
+
+  Future<bool> buyTier(String productId, {bool openStoreFallback = true}) async {
     _isLoading = true;
     _statusMessage = null;
     notifyListeners();
 
     try {
-      final success = await _service.buyProduct(productId);
+      final success = await _service.buyProduct(productId, openStoreFallback: openStoreFallback);
       _isLoading = false;
       if (success) {
         _statusMessage = 'Thank you for your generous support! ⭐';
@@ -124,6 +129,11 @@ class PurchaseViewModel with ChangeNotifier {
       _statusMessage = 'Unable to restore purchases at this moment.';
       notifyListeners();
     }
+  }
+
+  Future<void> resetDebugStatus() async {
+    await _service.resetPurchasesForDebug();
+    notifyListeners();
   }
 
   @override

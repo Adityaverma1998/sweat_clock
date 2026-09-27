@@ -75,6 +75,8 @@ class AppLocalizations {
       'tier_vip_desc': 'Ultimate lifetime support! Keep SweatClock 100% ad-free forever.',
       'support_now': 'Support',
       'support_again': 'Tip Again',
+      'open_play_store': 'Open Google Play Store',
+      'open_play_store_desc': 'View or rate SweatClock on Google Play',
     },
     'es': {
       'title': 'SweatClock',
@@ -139,6 +141,8 @@ class AppLocalizations {
       'tier_vip_desc': '¡Apoyo total vitalicio! Mantiene SweatClock 100% sin anuncios.',
       'support_now': 'Apoyar',
       'support_again': 'Dar Propina',
+      'open_play_store': 'Abrir Google Play Store',
+      'open_play_store_desc': 'Ver o calificar SweatClock en Google Play',
     },
     'fr': {
       'title': 'SweatClock',
@@ -203,6 +207,8 @@ class AppLocalizations {
       'tier_vip_desc': 'Soutien ultime à vie ! Garde SweatClock sans publicité.',
       'support_now': 'Soutenir',
       'support_again': 'Pourboire',
+      'open_play_store': 'Ouvrir Google Play Store',
+      'open_play_store_desc': 'Voir ou noter SweatClock sur Google Play',
     },
     'de': {
       'title': 'SweatClock',
@@ -267,6 +273,8 @@ class AppLocalizations {
       'tier_vip_desc': 'Ultimative lebenslange Unterstützung! Hält SweatClock 100% werbefrei.',
       'support_now': 'Unterstützen',
       'support_again': 'Erneut Unterstützen',
+      'open_play_store': 'Google Play Store öffnen',
+      'open_play_store_desc': 'SweatClock im Google Play Store bewerten',
     },
     'ja': {
       'title': 'SweatClock',
@@ -331,6 +339,8 @@ class AppLocalizations {
       'tier_vip_desc': '究極の生涯サポート！SweatClockを永久に完全広告なしに維持します。',
       'support_now': '支援する',
       'support_again': '追加支援',
+      'open_play_store': 'Google Playストアを開く',
+      'open_play_store_desc': 'Google PlayでSweatClockを表示・評価する',
     },
     'hi': {
       'title': 'SweatClock',
@@ -395,6 +405,8 @@ class AppLocalizations {
       'tier_vip_desc': 'सर्वश्रेष्ठ आजीवन समर्थन! SweatClock को हमेशा 100% विज्ञापन-मुक्त बनाए रखें।',
       'support_now': 'समर्थन करें',
       'support_again': 'दोबारा समर्थन करें',
+      'open_play_store': 'गूगल प्ले स्टोर खोलें',
+      'open_play_store_desc': 'गूगल प्ले पर SweatClock देखें या रेटिंग दें',
     }
   };
 

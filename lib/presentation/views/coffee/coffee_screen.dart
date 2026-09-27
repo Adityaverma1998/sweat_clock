@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/localization/localization_ext.dart';
@@ -136,58 +137,78 @@ class _CoffeeScreenState extends State<CoffeeScreen>
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () => Navigator.pop(dialogContext),
-                        style: TextButton.styleFrom(
-                          foregroundColor: context.textMuted,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                        child: Text(context.translate('cancel')),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      Navigator.pop(dialogContext);
+                      final success = await purchaseViewModel.buyTier(tier.id);
+                      if (context.mounted) {
+                        if (success) {
+                          _showSuccessDialog(context, tier);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Purchase was cancelled or failed.'),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.payment_rounded, size: 18),
+                    label: Text(
+                      '${context.translate('support_now')} ${tier.defaultPrice}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      flex: 2,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          Navigator.pop(dialogContext);
-                          final success = await purchaseViewModel.buyTier(tier.id);
-                          if (context.mounted) {
-                            if (success) {
-                              _showSuccessDialog(context, tier);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Purchase was cancelled or failed.'),
-                                  behavior: SnackBarBehavior.floating,
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: context.accent,
-                          foregroundColor: context.fabForeground,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          '${context.translate('support_now')} ${tier.defaultPrice}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: context.accent,
+                      foregroundColor: context.fabForeground,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      elevation: 0,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      Navigator.pop(dialogContext);
+                      await purchaseViewModel.openPlayStore();
+                    },
+                    icon: const Icon(Icons.shop_two_rounded, size: 16),
+                    label: Text(
+                      context.translate('open_play_store'),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ],
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: context.textPrimary,
+                      side: BorderSide(color: context.borderSubtle),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  style: TextButton.styleFrom(
+                    foregroundColor: context.textMuted,
+                  ),
+                  child: Text(context.translate('cancel')),
                 ),
               ],
             ),
@@ -529,7 +550,93 @@ class _CoffeeScreenState extends State<CoffeeScreen>
                 ],
               ),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 20),
+
+            // ── Google Play Store Banner Card ──
+            GestureDetector(
+              onTap: () => purchaseViewModel.openPlayStore(),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.teal.shade900.withValues(alpha: 0.25),
+                      context.bgSurface,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.tealAccent.withValues(alpha: 0.35),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.tealAccent.withValues(alpha: 0.15),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.shop_two_rounded,
+                        color: Colors.tealAccent,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            context.translate('open_play_store'),
+                            style: TextStyle(
+                              color: context.textPrimary,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            context.translate('open_play_store_desc'),
+                            style: TextStyle(
+                              color: context.textMuted,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.tealAccent,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Open',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(width: 4),
+                          Icon(Icons.arrow_outward_rounded, size: 14, color: Colors.black),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
 
             // ── Support Tiers ──
             ...PurchaseViewModel.tiers.map((tier) {
@@ -613,6 +720,30 @@ class _CoffeeScreenState extends State<CoffeeScreen>
                 ),
               ],
             ),
+            if (kDebugMode && purchaseViewModel.isSupporterPaid) ...[
+              const SizedBox(height: 16),
+              TextButton.icon(
+                onPressed: () async {
+                  await purchaseViewModel.resetDebugStatus();
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Supporter status reset (Debug mode).'),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                },
+                icon: const Icon(Icons.refresh_rounded, size: 16),
+                label: const Text(
+                  'Reset Supporter Status (Debug)',
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                ),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.orangeAccent,
+                ),
+              ),
+            ],
             const SizedBox(height: 24),
           ],
         ),

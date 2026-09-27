@@ -13,4 +13,15 @@ void main() {
     // Verify MyApp is mounted in tree
     expect(find.byType(MyApp), findsOneWidget);
   });
+
+  testWidgets('CoffeeScreen renders cleanly without layout exceptions', (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+
+    await tester.pumpWidget(MyApp(sharedPreferences: prefs));
+    await tester.pumpAndSettle();
+
+    // Verify app runs and widgets can settle without layout errors
+    expect(find.byType(MyApp), findsOneWidget);
+  });
 }

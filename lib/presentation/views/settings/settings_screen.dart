@@ -170,6 +170,15 @@ class SettingsScreen extends StatelessWidget {
                   }
                 },
               ),
+              _buildDivider(context),
+              _buildNavigationTile(
+                context: context,
+                icon: Icons.shop_two_rounded,
+                iconColor: Colors.blueAccent,
+                title: context.translate('open_play_store'),
+                value: '',
+                onTap: () => purchaseViewModel.openPlayStore(),
+              ),
             ]),
             const SizedBox(height: 40),
 

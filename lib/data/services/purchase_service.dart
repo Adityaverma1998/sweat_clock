@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PurchaseService {
   final SharedPreferences _prefs;
@@ -10,6 +11,7 @@ class PurchaseService {
   static const String keyIsPaid = 'is_supporter_paid';
   static const String keyPaidTier = 'supporter_paid_tier';
   static const String keyPaidDate = 'supporter_paid_date';
+  static const String playStorePackage = 'com.aditya.tech.stop_watch';
 
   static const String tier1 = 'sweatclock_coffee_199';   // $1.99
   static const String tier2 = 'sweatclock_coffee_499';   // $4.99
@@ -59,6 +61,29 @@ class PurchaseService {
   bool get isSupporterPaid => isPaidNotifier.value;
   String? get paidTier => paidTierNotifier.value;
 
+  bool isProductInStore(String productId) {
+    return products.any((p) => p.id == productId);
+  }
+
+  Future<bool> openPlayStoreListing() async {
+    final Uri marketUri = Uri.parse('market://details?id=$playStorePackage');
+    final Uri webUri = Uri.parse('https://play.google.com/store/apps/details?id=$playStorePackage');
+
+    try {
+      if (await canLaunchUrl(marketUri)) {
+        return await launchUrl(marketUri, mode: LaunchMode.externalApplication);
+      } else if (await canLaunchUrl(webUri)) {
+        return await launchUrl(webUri, mode: LaunchMode.externalApplication);
+      }
+    } catch (e) {
+      debugPrint('Error launching Google Play Store: $e');
+      try {
+        return await launchUrl(webUri, mode: LaunchMode.externalApplication);
+      } catch (_) {}
+    }
+    return false;
+  }
+
   Future<void> loadProducts() async {
     try {
       isStoreAvailable = await _inAppPurchase.isAvailable();
@@ -78,7 +103,7 @@ class PurchaseService {
     }
   }
 
-  Future<bool> buyProduct(String productId) async {
+  Future<bool> buyProduct(String productId, {bool openStoreFallback = true}) async {
     try {
       // Find matching store product if loaded
       ProductDetails? product;
@@ -90,17 +115,22 @@ class PurchaseService {
       }
 
       if (product != null) {
-        // Non-consumable: once paid on this account/device, always paid
+        // Non-consumable: opens Google Play In-app Billing bottom sheet
         final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
         return await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
       } else {
-        // Fallback for sandbox / testing environments when product IDs are not yet live in store
+        // Fallback for debug/development APKs: opens Google Play Store directly
+        if (openStoreFallback) {
+          await openPlayStoreListing();
+        }
         await _recordSuccessfulPurchase(productId, mockPriceFor(productId));
         return true;
       }
     } catch (e) {
       debugPrint('Error initiating purchase: $e');
-      // If store purchase fails due to environment (e.g. emulator without Play Store), allow mock fallback
+      if (openStoreFallback) {
+        await openPlayStoreListing();
+      }
       await _recordSuccessfulPurchase(productId, mockPriceFor(productId));
       return true;
     }
@@ -147,6 +177,14 @@ class PurchaseService {
 
     isPaidNotifier.value = true;
     paidTierNotifier.value = tierName;
+  }
+
+  Future<void> resetPurchasesForDebug() async {
+    await _prefs.remove(keyIsPaid);
+    await _prefs.remove(keyPaidTier);
+    await _prefs.remove(keyPaidDate);
+    isPaidNotifier.value = false;
+    paidTierNotifier.value = null;
   }
 
   String mockPriceFor(String productId) {
