@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/localization/localization_ext.dart';
 import '../../../core/theme/theme_ext.dart';
-import '../../viewmodels/purchase_viewmodel.dart';
 import '../../viewmodels/settings_viewmodel.dart';
-import '../coffee/coffee_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -12,7 +10,6 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<SettingsViewModel>();
-    final purchaseViewModel = context.watch<PurchaseViewModel>();
 
     return Scaffold(
       backgroundColor: context.bgBase,
@@ -20,11 +17,8 @@ class SettingsScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: context.textPrimary,
-            size: 20,
-          ),
+          icon: Icon(Icons.arrow_back_ios_new_rounded,
+              color: context.textPrimary, size: 20),
           style: IconButton.styleFrom(
             backgroundColor: context.bgSurface,
             shape: RoundedRectangleBorder(
@@ -38,7 +32,7 @@ class SettingsScreen extends StatelessWidget {
           context.translate('settings'),
           style: TextStyle(
             color: context.textPrimary,
-            fontSize: 22,
+            fontSize: 20,
             fontWeight: FontWeight.w800,
             letterSpacing: -0.5,
           ),
@@ -46,63 +40,63 @@ class SettingsScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ── Audio & Haptics ───────────────────────────────────────
             _buildSectionHeader(context.translate('audio_feel')),
-            _buildSectionContainer(
-              context,
-              [
-                _buildSwitchTile(
-                  context: context,
-                  icon: Icons.volume_up_rounded,
-                  iconColor: Colors.amber,
-                  title: context.translate('sound_effects'),
-                  subtitle: context.translate('sound_effects_desc'),
-                  value: viewModel.soundEffects,
-                  onChanged: (val) => viewModel.toggleSoundEffects(val),
-                ),
-                _buildDivider(context),
-                _buildSwitchTile(
-                  context: context,
-                  icon: Icons.vibration_rounded,
-                  iconColor: Colors.pinkAccent,
-                  title: context.translate('vibration'),
-                  subtitle: context.translate('vibration_desc'),
-                  value: viewModel.vibration,
-                  onChanged: (val) => viewModel.toggleVibration(val),
-                ),
-                _buildDivider(context),
-                _buildSwitchTile(
-                  context: context,
-                  icon: Icons.edgesensor_high_rounded,
-                  iconColor: Colors.deepOrangeAccent,
-                  title: context.translate('countdown_vibration'),
-                  subtitle: context.translate('countdown_vibration_desc'),
-                  value: viewModel.countdownVibration,
-                  onChanged: (val) => viewModel.toggleCountdownVibration(val),
-                ),
-                _buildDivider(context),
-                _buildSwitchTile(
-                  context: context,
-                  icon: Icons.record_voice_over_rounded,
-                  iconColor: Colors.blueAccent,
-                  title: context.translate('voice_cues'),
-                  subtitle: context.translate('voice_cues_desc'),
-                  value: viewModel.voiceCues,
-                  onChanged: (val) => viewModel.toggleVoiceCues(val),
-                ),
-              ],
-            ),
+            _buildSectionContainer(context, [
+              _buildSwitchTile(
+                context: context,
+                icon: Icons.volume_up_rounded,
+                iconColor: Colors.amber,
+                title: context.translate('sound_effects'),
+                subtitle: context.translate('sound_effects_desc'),
+                value: viewModel.soundEffects,
+                onChanged: (val) => viewModel.toggleSoundEffects(val),
+              ),
+              _buildDivider(context),
+              _buildSwitchTile(
+                context: context,
+                icon: Icons.record_voice_over_rounded,
+                iconColor: Colors.blueAccent,
+                title: context.translate('voice_cues'),
+                subtitle: context.translate('voice_cues_desc'),
+                value: viewModel.voiceCues,
+                onChanged: (val) => viewModel.toggleVoiceCues(val),
+              ),
+              _buildDivider(context),
+              _buildSwitchTile(
+                context: context,
+                icon: Icons.vibration_rounded,
+                iconColor: Colors.purpleAccent,
+                title: context.translate('vibration'),
+                subtitle: context.translate('vibration_desc'),
+                value: viewModel.vibration,
+                onChanged: (val) => viewModel.toggleVibration(val),
+              ),
+              _buildDivider(context),
+              _buildSwitchTile(
+                context: context,
+                icon: Icons.timer_outlined,
+                iconColor: Colors.orangeAccent,
+                title: context.translate('countdown_vibration'),
+                subtitle: context.translate('countdown_vibration_desc'),
+                value: viewModel.countdownVibration,
+                onChanged: (val) => viewModel.toggleCountdownVibration(val),
+              ),
+            ]),
             const SizedBox(height: 24),
+
+            // ── Display ───────────────────────────────────────────────
             _buildSectionHeader(context.translate('display')),
             _buildSectionContainer(context, [
               _buildSwitchTile(
                 context: context,
                 icon: Icons.dark_mode_rounded,
-                iconColor: Colors.purpleAccent,
+                iconColor: Colors.cyanAccent,
                 title: context.translate('dark_mode'),
                 subtitle: context.translate('dark_mode_desc'),
                 value: viewModel.isDarkMode,
@@ -120,6 +114,8 @@ class SettingsScreen extends StatelessWidget {
               ),
             ]),
             const SizedBox(height: 24),
+
+            // ── General ───────────────────────────────────────────────
             _buildSectionHeader(context.translate('general')),
             _buildSectionContainer(context, [
               _buildNavigationTile(
@@ -130,162 +126,42 @@ class SettingsScreen extends StatelessWidget {
                 value: viewModel.language,
                 onTap: () => _showLanguageSelector(context, viewModel),
               ),
-              _buildDivider(context),
-              _buildNavigationTile(
-                context: context,
-                icon: Icons.coffee_rounded,
-                iconColor: Colors.amber,
-                title: context.translate('buy_coffee'),
-                value: purchaseViewModel.isSupporterPaid
-                    ? '👑 ${context.translate('supporter_active')}'
-                    : 'From \$1.99',
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const CoffeeScreen()),
-                ),
-              ),
-              _buildDivider(context),
-              _buildNavigationTile(
-                context: context,
-                icon: Icons.restore_rounded,
-                iconColor: Colors.tealAccent,
-                title: context.translate('restore_purchases'),
-                value: '',
-                onTap: () async {
-                  await purchaseViewModel.restorePurchases();
-                  if (context.mounted && purchaseViewModel.statusMessage != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Row(
-                          children: [
-                            const Icon(Icons.check_circle_outline_rounded,
-                                color: Colors.tealAccent),
-                            const SizedBox(width: 10),
-                            Expanded(child: Text(purchaseViewModel.statusMessage!)),
-                          ],
-                        ),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                  }
-                },
-              ),
-              _buildDivider(context),
-              _buildNavigationTile(
-                context: context,
-                icon: Icons.shop_two_rounded,
-                iconColor: Colors.blueAccent,
-                title: context.translate('open_play_store'),
-                value: '',
-                onTap: () => purchaseViewModel.openPlayStore(),
-              ),
             ]),
-            const SizedBox(height: 40),
+            const SizedBox(height: 36),
 
-            // About SweatClock card matching premium aesthetic
+            // ── Minimal About Card ─────────────────────────────────────
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: context.bgSurface,
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: context.borderSubtle),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
               ),
               child: Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: context.accent.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.flash_on_rounded,
-                      color: context.accent,
-                      size: 28,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
                   Text(
-                    context.translate('title'),
+                    'SweatClock',
                     style: TextStyle(
-                      fontFamily: 'Bebas Neue',
-                      fontSize: 28,
-                      letterSpacing: 1.5,
                       color: context.textPrimary,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 16,
+                      letterSpacing: 0.5,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 6),
                   Text(
                     context.translate('version'),
                     style: TextStyle(
                       color: context.textMuted,
-                      fontSize: 13,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    context.translate('about_card_desc'),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: context.textSecondary,
-                      fontSize: 13,
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CoffeeScreen(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: context.accent.withOpacity(0.15),
-                        border: Border.all(
-                          color: context.accentLight.withOpacity(0.35),
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            purchaseViewModel.isSupporterPaid
-                                ? '👑 ${context.translate('supporter_active')}'
-                                : context.translate('buy_coffee'),
-                            style: TextStyle(
-                              color: purchaseViewModel.isSupporterPaid
-                                  ? Colors.amber
-                                  : context.accentLight,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 24),
           ],
         ),
       ),
@@ -294,29 +170,32 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8, bottom: 8),
+      padding: const EdgeInsets.only(left: 4, bottom: 8),
       child: Text(
         title,
         style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w800,
-          letterSpacing: 1.5,
           color: Colors.grey,
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1.2,
         ),
       ),
     );
   }
 
   Widget _buildSectionContainer(BuildContext context, List<Widget> children) {
-    return Material(
-      color: context.bgSurface,
-      shape: RoundedRectangleBorder(
+    return Container(
+      decoration: BoxDecoration(
+        color: context.bgSurface,
         borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: context.borderSubtle),
+        border: Border.all(color: context.borderSubtle),
       ),
-      clipBehavior: Clip.antiAlias,
       child: Column(children: children),
     );
+  }
+
+  Widget _buildDivider(BuildContext context) {
+    return Divider(height: 1, indent: 60, endIndent: 20, color: context.borderSubtle);
   }
 
   Widget _buildSwitchTile({
@@ -328,33 +207,50 @@ class SettingsScreen extends StatelessWidget {
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: iconColor.withOpacity(0.12),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(icon, color: iconColor, size: 20),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(icon, color: iconColor, size: 22),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: context.textPrimary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: context.textMuted,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Switch.adaptive(
+            value: value,
+            onChanged: onChanged,
+            activeTrackColor: context.accent,
+            activeThumbColor: Colors.white,
+          ),
+        ],
       ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: context.textPrimary,
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: TextStyle(color: context.textMuted, fontSize: 12),
-      ),
-      trailing: Switch.adaptive(
-        value: value,
-        onChanged: onChanged,
-        activeColor: context.accent,
-      ),
-      tileColor: Colors.transparent,
     );
   }
 
@@ -366,125 +262,114 @@ class SettingsScreen extends StatelessWidget {
     required String value,
     required VoidCallback onTap,
   }) {
-    return ListTile(
+    return InkWell(
       onTap: onTap,
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: iconColor.withOpacity(0.12),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(icon, color: iconColor, size: 20),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: context.textPrimary,
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            value,
-            style: TextStyle(
-              color: context.textMuted,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+      borderRadius: BorderRadius.circular(20),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(icon, color: iconColor, size: 22),
             ),
-          ),
-          const SizedBox(width: 8),
-          Icon(
-            Icons.arrow_forward_ios_rounded,
-            color: context.textMuted,
-            size: 14,
-          ),
-        ],
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: context.textPrimary,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            if (value.isNotEmpty) ...[
+              Text(
+                value,
+                style: TextStyle(
+                  color: context.textMuted,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 6),
+            ],
+            Icon(Icons.arrow_forward_ios_rounded, size: 14, color: context.textMuted),
+          ],
+        ),
       ),
-      tileColor: Colors.transparent,
     );
   }
 
-  Widget _buildDivider(BuildContext context) {
-    return Divider(color: context.borderSubtle, height: 1, indent: 56);
-  }
-
-  void _showLanguageSelector(
-    BuildContext context,
-    SettingsViewModel viewModel,
-  ) {
-    final languages = [
+  void _showLanguageSelector(BuildContext context, SettingsViewModel viewModel) {
+    const languages = [
       'English',
       'Español',
       'Français',
       'Deutsch',
       '日本語',
-      'Hindi',
+      'हिन्दी',
     ];
 
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        decoration: BoxDecoration(
+          color: context.bgSurface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          border: Border(top: BorderSide(color: context.borderSubtle)),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: context.borderDefault,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              context.translate('select_language'),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: context.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            ...languages.map((lang) {
+              final isSelected = viewModel.language == lang;
+              return ListTile(
+                title: Text(
+                  lang,
+                  style: TextStyle(
+                    color: isSelected ? context.accent : context.textPrimary,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  ),
+                ),
+                trailing: isSelected
+                    ? Icon(Icons.check_rounded, color: context.accent)
+                    : null,
+                onTap: () {
+                  viewModel.changeLanguage(lang);
+                  Navigator.pop(ctx);
+                },
+              );
+            }),
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                context.translate('select_language'),
-                style: TextStyle(
-                  color: context.textPrimary,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: languages.length,
-                  itemBuilder: (context, index) {
-                    final lang = languages[index];
-                    final isSelected = viewModel.language == lang;
-                    return ListTile(
-                      onTap: () {
-                        viewModel.changeLanguage(lang);
-                        Navigator.pop(context);
-                      },
-                      title: Text(
-                        lang,
-                        style: TextStyle(
-                          color: isSelected
-                              ? context.accent
-                              : context.textPrimary,
-                          fontWeight: isSelected
-                              ? FontWeight.w700
-                              : FontWeight.w500,
-                        ),
-                      ),
-                      trailing: isSelected
-                          ? Icon(
-                              Icons.check_rounded,
-                              color: context.accent,
-                              size: 22,
-                            )
-                          : null,
-                      tileColor: Colors.transparent,
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

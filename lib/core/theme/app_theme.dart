@@ -26,8 +26,6 @@ class AppTheme {
         isDark ? DarkThemeColors.borderSubtle : LightThemeColors.borderSubtle;
     final bDefault =
         isDark ? DarkThemeColors.borderDefault : LightThemeColors.borderDefault;
-    final bStrong =
-        isDark ? DarkThemeColors.borderStrong : LightThemeColors.borderStrong;
 
     final tPrimary =
         isDark ? DarkThemeColors.textPrimary : LightThemeColors.textPrimary;
@@ -35,30 +33,11 @@ class AppTheme {
         isDark ? DarkThemeColors.textSecondary : LightThemeColors.textSecondary;
     final tMuted =
         isDark ? DarkThemeColors.textMuted : LightThemeColors.textMuted;
-    final tDisabled =
-        isDark ? DarkThemeColors.textDisabled : LightThemeColors.textDisabled;
 
     final prep = isDark ? DarkThemeColors.prep : LightThemeColors.prep;
     final prepLight =
         isDark ? DarkThemeColors.prepLight : LightThemeColors.prepLight;
     final prepBg = isDark ? DarkThemeColors.prepBg : LightThemeColors.prepBg;
-    final prepBorder =
-        isDark ? DarkThemeColors.prepBorder : LightThemeColors.prepBorder;
-
-    final workout = isDark ? DarkThemeColors.workout : LightThemeColors.workout;
-    final workoutLight =
-        isDark ? DarkThemeColors.workoutLight : LightThemeColors.workoutLight;
-    final workoutBg =
-        isDark ? DarkThemeColors.workoutBg : LightThemeColors.workoutBg;
-    final workoutBorder =
-        isDark ? DarkThemeColors.workoutBorder : LightThemeColors.workoutBorder;
-
-    final rest = isDark ? DarkThemeColors.rest : LightThemeColors.rest;
-    final restLight =
-        isDark ? DarkThemeColors.restLight : LightThemeColors.restLight;
-    final restBg = isDark ? DarkThemeColors.restBg : LightThemeColors.restBg;
-    final restBorder =
-        isDark ? DarkThemeColors.restBorder : LightThemeColors.restBorder;
 
     final accent = isDark ? DarkThemeColors.accent : LightThemeColors.accent;
     final accentLight =
@@ -67,25 +46,12 @@ class AppTheme {
         isDark ? DarkThemeColors.accentSubtle : LightThemeColors.accentSubtle;
     final accentBg =
         isDark ? DarkThemeColors.accentBg : LightThemeColors.accentBg;
-    final accentBorder =
-        isDark ? DarkThemeColors.accentBorder : LightThemeColors.accentBorder;
-
-    final success = isDark ? DarkThemeColors.success : LightThemeColors.success;
-    final successLight =
-        isDark ? DarkThemeColors.successLight : LightThemeColors.successLight;
-    final successBg =
-        isDark ? DarkThemeColors.successBg : LightThemeColors.successBg;
-
-    final warning = isDark ? DarkThemeColors.warning : LightThemeColors.warning;
-    final warningBg =
-        isDark ? DarkThemeColors.warningBg : LightThemeColors.warningBg;
 
     final error = isDark ? DarkThemeColors.error : LightThemeColors.error;
     final errorLight =
         isDark ? DarkThemeColors.errorLight : LightThemeColors.errorLight;
     final errorBg = isDark ? DarkThemeColors.errorBg : LightThemeColors.errorBg;
 
-    final gold = isDark ? DarkThemeColors.gold : LightThemeColors.gold;
     final shadow =
         isDark ? DarkThemeColors.shadowColor : LightThemeColors.shadowColor;
     final fabBg =
@@ -197,8 +163,6 @@ class AppTheme {
           minimumSize: const Size(double.infinity, 52),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          textStyle: const TextStyle(
-              fontSize: 15, fontWeight: FontWeight.w700, letterSpacing: 0.3),
         ),
       ),
 
@@ -210,7 +174,6 @@ class AppTheme {
           side: BorderSide(color: bDefault, width: 1.5),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
         ),
       ),
 
@@ -218,7 +181,6 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: accent,
-          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
       ),
 
@@ -231,8 +193,6 @@ class AppTheme {
           minimumSize: const Size(double.infinity, 52),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          textStyle: const TextStyle(
-              fontSize: 15, fontWeight: FontWeight.w700, letterSpacing: 0.3),
         ),
       ),
 

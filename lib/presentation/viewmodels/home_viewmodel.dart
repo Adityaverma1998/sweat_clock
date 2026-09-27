@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 enum WorkoutPresetType {
-  tabata,
   hiit,
   boxing,
   emom,
@@ -38,19 +37,6 @@ class WorkoutPreset {
 
 class HomeViewModel with ChangeNotifier {
   static const List<WorkoutPreset> presets = [
-    WorkoutPreset(
-      type: WorkoutPresetType.tabata,
-      name: 'Tabata',
-      subtitle: '20s/10s • 8 rds',
-      icon: '⚡',
-      prepMinutes: 0,
-      prepSeconds: 10,
-      workoutMinutes: 0,
-      workoutSeconds: 20,
-      restMinutes: 0,
-      restSeconds: 10,
-      rounds: 8,
-    ),
     WorkoutPreset(
       type: WorkoutPresetType.hiit,
       name: 'HIIT 40/20',

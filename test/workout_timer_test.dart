@@ -5,12 +5,11 @@ void main() {
   group('HomeViewModel Total Duration & Presets Tests', () {
     test('Calculates totalSeconds accurately without rest after final round', () {
       final vm = HomeViewModel();
-      // Tabata defaults: 8 rounds, 10s prep, 20s work, 10s rest
-      vm.applyPreset(HomeViewModel.presets.firstWhere((p) => p.type == WorkoutPresetType.tabata));
+      // HIIT defaults: 5 rounds, 10s prep, 40s work, 20s rest
+      vm.applyPreset(HomeViewModel.presets.firstWhere((p) => p.type == WorkoutPresetType.hiit));
 
-      // Prep (10s) + 8 rounds of work (8 * 20s = 160s) + 7 rests (7 * 10s = 70s) = 240s (4 mins)
-      // The old flawed formula would have given 250s (4m 10s) due to counting 8 rests.
-      expect(vm.totalSeconds, equals(240));
+      // Prep (10s) + 5 rounds of work (5 * 40s = 200s) + 4 rests (4 * 20s = 80s) = 290s
+      expect(vm.totalSeconds, equals(290));
     });
 
     test('Single round workout has 0 rests in totalSeconds', () {
@@ -40,7 +39,7 @@ void main() {
     test('Manually modifying a value sets selectedPreset to custom', () {
       final vm = HomeViewModel();
       vm.applyPreset(HomeViewModel.presets.first);
-      expect(vm.selectedPreset, equals(WorkoutPresetType.tabata));
+      expect(vm.selectedPreset, equals(WorkoutPresetType.hiit));
 
       vm.setWorkoutTime(0, 25);
       expect(vm.selectedPreset, equals(WorkoutPresetType.custom));

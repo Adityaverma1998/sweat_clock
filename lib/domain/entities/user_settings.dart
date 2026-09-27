@@ -10,10 +10,10 @@ class UserSettings {
   const UserSettings({
     required this.soundEffects,
     required this.vibration,
-    required this.voiceCues,
+    this.voiceCues = true,
     required this.isDarkMode,
     required this.keepScreenOn,
-    required this.countdownVibration,
+    this.countdownVibration = true,
     required this.language,
   });
 

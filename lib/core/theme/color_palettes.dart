@@ -135,7 +135,7 @@ class AppColors {
   static const Color blue500_30 = Color(0x4D3B82F6);
   static const Color blue600_10 = Color(0x1A2563EB);
   static const Color blue600_25 = Color(0x403B82F6);
-  static const Color purple600_ring = Color(0x147C3AED);
+  static const Color purple600Ring = Color(0x147C3AED);
 
   // Green tints
   static const Color green500_12 = Color(0x1F22C55E);

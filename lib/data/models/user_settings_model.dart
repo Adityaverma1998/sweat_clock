@@ -4,10 +4,10 @@ class UserSettingsModel extends UserSettings {
   const UserSettingsModel({
     required super.soundEffects,
     required super.vibration,
-    required super.voiceCues,
+    super.voiceCues = true,
     required super.isDarkMode,
     required super.keepScreenOn,
-    required super.countdownVibration,
+    super.countdownVibration = true,
     required super.language,
   });
 

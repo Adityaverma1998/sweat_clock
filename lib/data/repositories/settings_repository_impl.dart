@@ -10,21 +10,19 @@ class SettingsRepositoryImpl implements SettingsRepository {
 
   static const String _keySoundEffects = 'sound_effects';
   static const String _keyVibration = 'vibration';
-  static const String _keyVoiceCues = 'voice_cues';
   static const String _keyIsDarkMode = 'is_dark_mode';
   static const String _keyKeepScreenOn = 'keep_screen_on';
-  static const String _keyCountdownVibration = 'countdown_vibration';
   static const String _keyLanguage = 'language';
+  static const String _keyCountdownSeconds = 'last_countdown_seconds';
+  static const String _keyTimerMode = 'last_timer_mode';
 
   @override
   Future<UserSettings> getSettings() async {
     return UserSettingsModel(
       soundEffects: _prefs.getBool(_keySoundEffects) ?? true,
       vibration: _prefs.getBool(_keyVibration) ?? true,
-      voiceCues: _prefs.getBool(_keyVoiceCues) ?? true,
       isDarkMode: _prefs.getBool(_keyIsDarkMode) ?? true,
       keepScreenOn: _prefs.getBool(_keyKeepScreenOn) ?? false,
-      countdownVibration: _prefs.getBool(_keyCountdownVibration) ?? true,
       language: _prefs.getString(_keyLanguage) ?? 'English',
     );
   }
@@ -33,10 +31,28 @@ class SettingsRepositoryImpl implements SettingsRepository {
   Future<void> saveSettings(UserSettings settings) async {
     await _prefs.setBool(_keySoundEffects, settings.soundEffects);
     await _prefs.setBool(_keyVibration, settings.vibration);
-    await _prefs.setBool(_keyVoiceCues, settings.voiceCues);
     await _prefs.setBool(_keyIsDarkMode, settings.isDarkMode);
     await _prefs.setBool(_keyKeepScreenOn, settings.keepScreenOn);
-    await _prefs.setBool(_keyCountdownVibration, settings.countdownVibration);
     await _prefs.setString(_keyLanguage, settings.language);
+  }
+
+  @override
+  int getCountdownSeconds() {
+    return _prefs.getInt(_keyCountdownSeconds) ?? 600; // default 10 minutes
+  }
+
+  @override
+  Future<void> saveCountdownSeconds(int seconds) async {
+    await _prefs.setInt(_keyCountdownSeconds, seconds);
+  }
+
+  @override
+  String getTimerMode() {
+    return _prefs.getString(_keyTimerMode) ?? 'countdown';
+  }
+
+  @override
+  Future<void> saveTimerMode(String mode) async {
+    await _prefs.setString(_keyTimerMode, mode);
   }
 }

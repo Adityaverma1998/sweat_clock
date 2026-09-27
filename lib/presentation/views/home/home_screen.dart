@@ -10,7 +10,7 @@ import '../../../data/services/vibration_service.dart';
 import '../../widgets/close_app_dialog.dart';
 import '../../widgets/set_time_bottom_sheet.dart';
 import '../../widgets/total_workout_bottom_sheet.dart';
-import '../coffee/coffee_screen.dart';
+import '../standalone_timer/standalone_timer_screen.dart';
 import '../settings/settings_screen.dart';
 import '../timer/timer_screen.dart';
 import '../../../core/utils/in_app_update_helper.dart';
@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const CoffeeScreen()),
+                    MaterialPageRoute(builder: (context) => const StandaloneTimerScreen()),
                   );
                 },
                 child: Container(
@@ -162,8 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  child: const Center(
-                    child: Text('☕', style: TextStyle(fontSize: 16)),
+                  child: Center(
+                    child: Icon(Icons.timer_outlined, size: 18, color: context.accent),
                   ),
                 ),
               ),

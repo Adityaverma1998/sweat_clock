@@ -8,7 +8,6 @@ import '../../../core/localization/localization_ext.dart';
 import '../../../core/theme/theme_ext.dart';
 import '../../viewmodels/home_viewmodel.dart';
 import '../home/home_screen.dart';
-import '../coffee/coffee_screen.dart';
 import '../../../widgets/confetti_view.dart';
 import 'dart:math' as math;
 
@@ -81,9 +80,7 @@ class _CongratulationScreenState extends State<CongratulationScreen>
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          _buildCoffeeNudge(context),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
                           _buildActionButtons(context),
                         ],
                       ),
@@ -307,69 +304,6 @@ class _CongratulationScreenState extends State<CongratulationScreen>
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildCoffeeNudge(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const CoffeeScreen()),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [context.accentBg, context.accentBg.withOpacity(0.04)],
-          ),
-          border: Border.all(color: context.accentBorder),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: context.shadowColor.withOpacity(0.1),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            const Text('☕', style: TextStyle(fontSize: 24)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Love SweatClock?",
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: context.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    "Buy me a coffee — starts at \$1.99",
-                    style: TextStyle(fontSize: 11, color: context.textMuted),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 26,
-              height: 26,
-              decoration: BoxDecoration(
-                color: context.accent.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.chevron_right, size: 16, color: context.accent),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -65,7 +65,7 @@ class LightThemeColors {
   static const Color gold = AppColors.amber600;
 
   // ─── Ring ─────────────────────────────────────────────────
-  static const Color ringTrack = AppColors.purple600_ring;
+  static const Color ringTrack = AppColors.purple600Ring;
   static const Color ringPrepGradStart = AppColors.amber500;
   static const Color ringPrepGradEnd = AppColors.amber600;
   static const Color ringWorkoutGradStart = AppColors.amber500;

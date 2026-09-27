@@ -7,11 +7,19 @@ class VibrationService {
     _enabled = enabled;
   }
 
-  /// Short tap — used for countdown ticks (3, 2, 1).
-  Future<void> vibrate() async {
+  /// Short tap — used for countdown ticks (3, 2, 1) and generic UI actions.
+  Future<void> vibrate({int duration = 500, int amplitude = -1}) async {
     if (!_enabled) return;
     try {
       await HapticFeedback.lightImpact();
+    } catch (_) {}
+  }
+
+  /// Button press haptic feedback
+  Future<void> vibrateAction() async {
+    if (!_enabled) return;
+    try {
+      await HapticFeedback.selectionClick();
     } catch (_) {}
   }
 
@@ -43,4 +51,7 @@ class VibrationService {
       }
     } catch (_) {}
   }
+
+  /// Generic timer complete haptic vibration
+  Future<void> vibrateTimerComplete() => vibrateCongrats();
 }

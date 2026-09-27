@@ -24,6 +24,11 @@ class SettingsViewModel with ChangeNotifier {
   bool get countdownVibration => _settings.countdownVibration;
   String get language => _settings.language;
 
+  int getCountdownSeconds() => _repository.getCountdownSeconds();
+  Future<void> saveCountdownSeconds(int seconds) => _repository.saveCountdownSeconds(seconds);
+  String getTimerMode() => _repository.getTimerMode();
+  Future<void> saveTimerMode(String mode) => _repository.saveTimerMode(mode);
+
   Future<void> _loadSettings() async {
     _settings = await _repository.getSettings();
     _applyWakelock(_settings.keepScreenOn);
@@ -68,7 +73,9 @@ class SettingsViewModel with ChangeNotifier {
 
   void _applyWakelock(bool enable) {
     try {
-      WakelockPlus.toggle(enable: enable);
+      WakelockPlus.toggle(enable: enable).catchError((e) {
+        debugPrint("Wakelock error setting state: $e");
+      });
     } catch (e) {
       debugPrint("Wakelock error setting state: $e");
     }

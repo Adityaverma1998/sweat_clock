@@ -104,7 +104,6 @@ class AudioService {
   Future<void> _initAudio() async {
     try {
       await _player.setReleaseMode(ReleaseMode.stop);
-      // Configure audio session to duck other audio rather than abruptly cutting off user music
       await AudioPlayer.global.setAudioContext(
         AudioContextConfig(
           focus: AudioContextConfigFocus.duckOthers,
@@ -144,7 +143,6 @@ class AudioService {
     }
   }
 
-  /// Play audio asset with instant fallback to TTS
   Future<void> _playAsset(String path, {String? ttsKey}) async {
     if (!_enabled) return;
     try {
@@ -171,17 +169,13 @@ class AudioService {
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // COUNTDOWN TICKS  (3, 2, 1)
-  // Plays high quality audio asset: assets/audio/<lang>/<number>.mp3
+  // WORKOUT CUES
   // ─────────────────────────────────────────────────────────────────────────
   Future<void> speakTick(String number) async {
     if (!_enabled) return;
     await _playAsset('audio/$_langCode/$number.mp3', ttsKey: number);
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // TRANSITION CUES  (Go / Rest / Congrats)
-  // ─────────────────────────────────────────────────────────────────────────
   Future<void> speakGo() async {
     if (!_enabled) return;
     await _playAsset('audio/$_langCode/go.mp3', ttsKey: 'go');
@@ -197,7 +191,21 @@ class AudioService {
     await _playAsset('audios/congrat.mp3', ttsKey: 'congrats');
   }
 
-  /// Silence any in-progress sound/speech
+  // ─────────────────────────────────────────────────────────────────────────
+  // GENERIC TIMER SOUNDS
+  // ─────────────────────────────────────────────────────────────────────────
+  Future<void> playTimerComplete() async {
+    if (!_enabled) return;
+    await _playAsset('audios/congrat.mp3', ttsKey: 'congrats');
+  }
+
+  Future<void> playBeep() async {
+    if (!_enabled) return;
+    await _playAsset('audio/$_langCode/1.mp3', ttsKey: '1');
+  }
+
+  Future<void> stop() => stopSpeaking();
+
   Future<void> stopSpeaking() async {
     try {
       await _player.stop();
@@ -205,7 +213,6 @@ class AudioService {
     } catch (_) {}
   }
 
-  /// Legacy alias
   Future<void> speakCountdown(String key) => speakTick(key);
 
   void dispose() {
