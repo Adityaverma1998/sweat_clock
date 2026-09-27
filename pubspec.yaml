@@ -54,6 +54,7 @@ dependencies:
   path_provider: ^2.1.6
   audioplayers: ^6.8.1
   in_app_purchase: ^3.3.1
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
