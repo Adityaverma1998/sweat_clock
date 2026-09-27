@@ -11,7 +11,9 @@ import 'data/repositories/settings_repository_impl.dart';
 import 'data/services/audio_service.dart';
 import 'data/services/vibration_service.dart';
 import 'domain/repositories/settings_repository.dart';
+import 'data/services/purchase_service.dart';
 import 'presentation/viewmodels/home_viewmodel.dart';
+import 'presentation/viewmodels/purchase_viewmodel.dart';
 import 'presentation/viewmodels/settings_viewmodel.dart';
 import 'presentation/views/home/home_screen.dart';
 
@@ -41,6 +43,15 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<HomeViewModel>(
           create: (_) => HomeViewModel(),
+        ),
+        Provider<PurchaseService>(
+          create: (_) => PurchaseService(sharedPreferences),
+          dispose: (_, service) => service.dispose(),
+        ),
+        ChangeNotifierProvider<PurchaseViewModel>(
+          create: (context) => PurchaseViewModel(
+            context.read<PurchaseService>(),
+          ),
         ),
       ],
       child: ScreenUtilInit(

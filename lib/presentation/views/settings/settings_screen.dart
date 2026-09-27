@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/localization/localization_ext.dart';
 import '../../../core/theme/theme_ext.dart';
+import '../../viewmodels/purchase_viewmodel.dart';
 import '../../viewmodels/settings_viewmodel.dart';
 import '../coffee/coffee_screen.dart';
 
@@ -11,6 +12,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<SettingsViewModel>();
+    final purchaseViewModel = context.watch<PurchaseViewModel>();
 
     return Scaffold(
       backgroundColor: context.bgBase,
@@ -128,6 +130,46 @@ class SettingsScreen extends StatelessWidget {
                 value: viewModel.language,
                 onTap: () => _showLanguageSelector(context, viewModel),
               ),
+              _buildDivider(context),
+              _buildNavigationTile(
+                context: context,
+                icon: Icons.coffee_rounded,
+                iconColor: Colors.amber,
+                title: context.translate('buy_coffee'),
+                value: purchaseViewModel.isSupporterPaid
+                    ? '👑 ${context.translate('supporter_active')}'
+                    : 'From \$1.99',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CoffeeScreen()),
+                ),
+              ),
+              _buildDivider(context),
+              _buildNavigationTile(
+                context: context,
+                icon: Icons.restore_rounded,
+                iconColor: Colors.tealAccent,
+                title: context.translate('restore_purchases'),
+                value: '',
+                onTap: () async {
+                  await purchaseViewModel.restorePurchases();
+                  if (context.mounted && purchaseViewModel.statusMessage != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: [
+                            const Icon(Icons.check_circle_outline_rounded,
+                                color: Colors.tealAccent),
+                            const SizedBox(width: 10),
+                            Expanded(child: Text(purchaseViewModel.statusMessage!)),
+                          ],
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                },
+              ),
             ]),
             const SizedBox(height: 40),
 
@@ -212,13 +254,22 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(
-                        context.translate('buy_coffee'),
-                        style: TextStyle(
-                          color: context.accentLight,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            purchaseViewModel.isSupporterPaid
+                                ? '👑 ${context.translate('supporter_active')}'
+                                : context.translate('buy_coffee'),
+                            style: TextStyle(
+                              color: purchaseViewModel.isSupporterPaid
+                                  ? Colors.amber
+                                  : context.accentLight,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
