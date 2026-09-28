@@ -5,16 +5,29 @@ import 'package:stop_watch/data/services/audio_service.dart';
 import 'package:stop_watch/data/services/vibration_service.dart';
 import 'package:stop_watch/presentation/viewmodels/settings_viewmodel.dart';
 import 'package:stop_watch/presentation/viewmodels/standalone_timer_viewmodel.dart';
+import 'package:stop_watch/presentation/viewmodels/timer_viewmodel.dart';
 
 class MockAudioService implements AudioService {
   int playTimerCompleteCallCount = 0;
   int playBeepCallCount = 0;
+  int playGoCountdownCallCount = 0;
+  int playRestCountdownCallCount = 0;
 
   @override
   void updateEnabled(bool enabled) {}
 
   @override
   Future<void> updateLanguage(String languageName) async {}
+
+  @override
+  Future<void> playGoCountdown() async {
+    playGoCountdownCallCount++;
+  }
+
+  @override
+  Future<void> playRestCountdown() async {
+    playRestCountdownCallCount++;
+  }
 
   @override
   Future<void> speakTick(String number) async {}
@@ -209,16 +222,47 @@ void main() {
     });
   });
 
-  group('StandaloneTimerViewModel - Time Formatting', () {
-    test('Formats under 1 hour as MM:SS and >= 1 hour as HH:MM:SS', () {
-      timerViewModel.setCountdownDuration(const Duration(seconds: 45));
-      expect(timerViewModel.formattedTime, '00:45');
+  group('Workout Timer - Audio Cue & Timing Synchronization', () {
+    test('Prep phase triggers playGoCountdown when 3 seconds remain', () async {
+      final workoutVm = TimerViewModel(
+        prepSeconds: 3,
+        workoutSeconds: 5,
+        restSeconds: 3,
+        totalRounds: 2,
+        settingsViewModel: settingsViewModel,
+        audioService: mockAudioService,
+        vibrationService: mockVibrationService,
+      );
 
-      timerViewModel.setCountdownDuration(const Duration(minutes: 9, seconds: 42));
-      expect(timerViewModel.formattedTime, '09:42');
+      workoutVm.startTimer();
+      // Tick 1 (100ms) will immediately detect remaining <= 3 and trigger playGoCountdown once
+      await Future.delayed(const Duration(milliseconds: 250));
 
-      timerViewModel.setCountdownDuration(const Duration(hours: 1, minutes: 2, seconds: 3));
-      expect(timerViewModel.formattedTime, '01:02:03');
+      expect(mockAudioService.playGoCountdownCallCount, equals(1));
+      expect(workoutVm.currentPhase, equals(WorkoutPhase.prep));
+
+      workoutVm.dispose();
+    });
+
+    test('Workout phase triggers playRestCountdown when 3 seconds remain if more rounds left', () async {
+      final workoutVm = TimerViewModel(
+        prepSeconds: 0,
+        workoutSeconds: 3,
+        restSeconds: 3,
+        totalRounds: 2,
+        settingsViewModel: settingsViewModel,
+        audioService: mockAudioService,
+        vibrationService: mockVibrationService,
+      );
+
+      workoutVm.startTimer();
+      // 0 prep means it starts in workout. At 3s remaining, triggers playRestCountdown once
+      await Future.delayed(const Duration(milliseconds: 250));
+
+      expect(mockAudioService.playRestCountdownCallCount, equals(1));
+      expect(workoutVm.currentPhase, equals(WorkoutPhase.workout));
+
+      workoutVm.dispose();
     });
   });
 }

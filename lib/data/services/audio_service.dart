@@ -171,6 +171,22 @@ class AudioService {
   // ─────────────────────────────────────────────────────────────────────────
   // WORKOUT CUES
   // ─────────────────────────────────────────────────────────────────────────
+  /// Plays the full "3, 2, 1, Go!" countdown audio cue (assets/audios/go.mp3).
+  /// Starting this when 3 seconds remain perfectly synchronizes "3, 2, 1" with
+  /// the countdown clock and concludes with "Go!" right as the Workout phase starts.
+  Future<void> playGoCountdown() async {
+    if (!_enabled) return;
+    await _playAsset('audios/go.mp3', ttsKey: 'go');
+  }
+
+  /// Plays the full "3, 2, 1, Rest!" countdown audio cue (assets/audios/rest.mp3).
+  /// Starting this when 3 seconds remain perfectly synchronizes "3, 2, 1" with
+  /// the countdown clock and concludes with "Rest!" right as the Rest phase starts.
+  Future<void> playRestCountdown() async {
+    if (!_enabled) return;
+    await _playAsset('audios/rest.mp3', ttsKey: 'rest');
+  }
+
   Future<void> speakTick(String number) async {
     if (!_enabled) return;
     await _playAsset('audio/$_langCode/$number.mp3', ttsKey: number);
@@ -178,7 +194,7 @@ class AudioService {
 
   Future<void> speakGo() async {
     if (!_enabled) return;
-    await _playAsset('audio/$_langCode/go.mp3', ttsKey: 'go');
+    await _playAsset('audios/go.mp3', ttsKey: 'go');
   }
 
   Future<void> speakRest() async {

@@ -31,6 +31,9 @@ class TimerViewModel with ChangeNotifier {
   /// Tracks which second was cued to prevent duplicate audio/haptic calls.
   int _lastCuedSecond = -1;
 
+  /// Tracks whether the 3-second countdown audio cue was triggered for this phase.
+  bool _countdownAudioTriggered = false;
+
   Timer? _timer;
 
   TimerViewModel({
@@ -82,16 +85,41 @@ class TimerViewModel with ChangeNotifier {
     if (remaining != _secondsRemaining) {
       _secondsRemaining = remaining;
       notifyListeners();
+    }
 
-      // ── Countdown cue: fires at 3, 2, 1 s ────────────────────────────────
-      if (_secondsRemaining >= 1 &&
-          _secondsRemaining <= 3 &&
-          _currentPhase != WorkoutPhase.completed &&
-          _lastCuedSecond != _secondsRemaining) {
+    // ── Countdown cue: fires when last 3 seconds remain (3, 2, 1) ────────
+    if (_secondsRemaining >= 1 &&
+        _secondsRemaining <= 3 &&
+        _currentPhase != WorkoutPhase.completed) {
+
+      // 1. Trigger the continuous "3, 2, 1, Go!" or "3, 2, 1, Rest!" audio cue once
+      if (!_countdownAudioTriggered && _phaseDuration >= 3) {
+        _countdownAudioTriggered = true;
+        if (_currentPhase == WorkoutPhase.prep || _currentPhase == WorkoutPhase.rest) {
+          // Transitioning to Workout → plays "3, 2, 1, Go!"
+          audioService.playGoCountdown();
+        } else if (_currentPhase == WorkoutPhase.workout) {
+          if (_currentRound < totalRounds) {
+            // Transitioning to Rest → plays "3, 2, 1, Rest!"
+            audioService.playRestCountdown();
+          } else {
+            // Final round ending → next is congrats
+            audioService.speakTick('$_secondsRemaining');
+          }
+        }
+      }
+
+      // 2. Fire haptic tick on each countdown second (3, 2, 1)
+      if (_lastCuedSecond != _secondsRemaining) {
         _lastCuedSecond = _secondsRemaining;
-        audioService.speakTick('$_secondsRemaining');
         if (settingsViewModel.settings.countdownVibration) {
           vibrationService.vibrate();
+        }
+        // In final workout round, speak tick for 2 and 1 as well
+        if (_currentPhase == WorkoutPhase.workout &&
+            _currentRound >= totalRounds &&
+            _secondsRemaining < 3) {
+          audioService.speakTick('$_secondsRemaining');
         }
       }
     }
@@ -105,16 +133,19 @@ class TimerViewModel with ChangeNotifier {
 
   // ─────────────────────────────────────────────────────────────────────────
   // PHASE TRANSITIONS
-  // Each branch announces what is starting next, then updates state.
   // ─────────────────────────────────────────────────────────────────────────
   void _transitionToNextPhase() {
     _phaseStopwatch.reset();
     _phaseStopwatch.start();
     _lastCuedSecond = -1;
+    _countdownAudioTriggered = false;
 
     if (_currentPhase == WorkoutPhase.prep) {
       // Prep → Workout
-      audioService.speakGo();
+      // If prep was shorter than 3s, playGoCountdown wasn't triggered, so speakGo now
+      if (prepSeconds < 3) {
+        audioService.speakGo();
+      }
       if (settingsViewModel.settings.countdownVibration) {
         vibrationService.vibrateImpact();
       }
@@ -138,7 +169,9 @@ class TimerViewModel with ChangeNotifier {
         notifyListeners();
       } else {
         // More rounds → Rest
-        audioService.speakRest();
+        if (workoutSeconds < 3) {
+          audioService.speakRest();
+        }
         vibrationService.vibrateRestStart();
         _currentPhase = WorkoutPhase.rest;
         _phaseDuration = restSeconds;
@@ -149,7 +182,9 @@ class TimerViewModel with ChangeNotifier {
 
     } else if (_currentPhase == WorkoutPhase.rest) {
       // Rest → Workout (next round)
-      audioService.speakGo();
+      if (restSeconds < 3) {
+        audioService.speakGo();
+      }
       if (settingsViewModel.settings.countdownVibration) {
         vibrationService.vibrateImpact();
       }
@@ -169,6 +204,7 @@ class TimerViewModel with ChangeNotifier {
     _isPaused = !_isPaused;
     if (_isPaused) {
       _phaseStopwatch.stop();
+      audioService.stopSpeaking();
     } else {
       _phaseStopwatch.start();
     }
@@ -180,6 +216,8 @@ class TimerViewModel with ChangeNotifier {
     _timer?.cancel();
     _phaseStopwatch.reset();
     _lastCuedSecond = -1;
+    _countdownAudioTriggered = false;
+    audioService.stopSpeaking();
     _isTransitioning = false;
     _secondsRemaining = 0;
     _isTransitioning = true;
@@ -187,14 +225,15 @@ class TimerViewModel with ChangeNotifier {
     startTimer();
   }
 
-  /// Restart entire workout from round 1 with an explicit 3→2→1→Go countdown.
+  /// Restart entire workout from round 1.
   Future<void> resetTimer() async {
     _timer?.cancel();
     _phaseStopwatch.reset();
     _lastCuedSecond = -1;
+    _countdownAudioTriggered = false;
     _isTransitioning = false;
 
-    // Silence any leftover speech (e.g. "Rest" from a prior phase)
+    // Silence any leftover speech or audio
     await audioService.stopSpeaking();
 
     // Reset state
@@ -205,24 +244,7 @@ class TimerViewModel with ChangeNotifier {
     _secondsRemaining = _phaseDuration;
     notifyListeners();
 
-    // Explicit 3 → 2 → 1 → Go before the timer starts ticking
-    await _runResetCountdown();
     startTimer();
-  }
-
-  /// Plays 3, 2, 1 (one per second, properly awaited) then "Go!".
-  /// Used only by resetTimer so we guarantee the full sequence is heard.
-  Future<void> _runResetCountdown() async {
-    for (final n in ['3', '2', '1']) {
-      await audioService.speakCountdown(n);
-      await Future.delayed(const Duration(seconds: 1));
-    }
-    audioService.speakGo();
-    if (settingsViewModel.settings.countdownVibration) {
-      vibrationService.vibrateImpact();
-    }
-    // Small pause so "Go!" finishes before the first tick fires
-    await Future.delayed(const Duration(milliseconds: 600));
   }
 
   @override
