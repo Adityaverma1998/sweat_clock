@@ -31,9 +31,6 @@ class TimerViewModel with ChangeNotifier {
   /// Tracks which second was cued to prevent duplicate audio/haptic calls.
   int _lastCuedSecond = -1;
 
-  /// Tracks whether the 3-second countdown audio cue was triggered for this phase.
-  bool _countdownAudioTriggered = false;
-
   Timer? _timer;
 
   TimerViewModel({
@@ -87,39 +84,19 @@ class TimerViewModel with ChangeNotifier {
       notifyListeners();
     }
 
-    // ── Countdown cue: fires when last 3 seconds remain (3, 2, 1) ────────
+    // ── Countdown cue: fires precisely on each countdown second (3, 2, 1) ───
     if (_secondsRemaining >= 1 &&
         _secondsRemaining <= 3 &&
         _currentPhase != WorkoutPhase.completed) {
-
-      // 1. Trigger the continuous "3, 2, 1, Go!" or "3, 2, 1, Rest!" audio cue once
-      if (!_countdownAudioTriggered && _phaseDuration >= 3) {
-        _countdownAudioTriggered = true;
-        if (_currentPhase == WorkoutPhase.prep || _currentPhase == WorkoutPhase.rest) {
-          // Transitioning to Workout → plays "3, 2, 1, Go!"
-          audioService.playGoCountdown();
-        } else if (_currentPhase == WorkoutPhase.workout) {
-          if (_currentRound < totalRounds) {
-            // Transitioning to Rest → plays "3, 2, 1, Rest!"
-            audioService.playRestCountdown();
-          } else {
-            // Final round ending → next is congrats
-            audioService.speakTick('$_secondsRemaining');
-          }
-        }
-      }
-
-      // 2. Fire haptic tick on each countdown second (3, 2, 1)
       if (_lastCuedSecond != _secondsRemaining) {
         _lastCuedSecond = _secondsRemaining;
+
+        // Instant audio cue aligned with this exact second (3, 2, or 1)
+        audioService.playCountdownTick(_secondsRemaining);
+
+        // Haptic pulse synchronized with this second
         if (settingsViewModel.settings.countdownVibration) {
           vibrationService.vibrate();
-        }
-        // In final workout round, speak tick for 2 and 1 as well
-        if (_currentPhase == WorkoutPhase.workout &&
-            _currentRound >= totalRounds &&
-            _secondsRemaining < 3) {
-          audioService.speakTick('$_secondsRemaining');
         }
       }
     }
@@ -138,14 +115,10 @@ class TimerViewModel with ChangeNotifier {
     _phaseStopwatch.reset();
     _phaseStopwatch.start();
     _lastCuedSecond = -1;
-    _countdownAudioTriggered = false;
 
     if (_currentPhase == WorkoutPhase.prep) {
-      // Prep → Workout
-      // If prep was shorter than 3s, playGoCountdown wasn't triggered, so speakGo now
-      if (prepSeconds < 3) {
-        audioService.speakGo();
-      }
+      // Prep → Workout: play "Go!" right on the transition
+      audioService.playGo();
       if (settingsViewModel.settings.countdownVibration) {
         vibrationService.vibrateImpact();
       }
@@ -157,7 +130,7 @@ class TimerViewModel with ChangeNotifier {
 
     } else if (_currentPhase == WorkoutPhase.workout) {
       if (_currentRound >= totalRounds) {
-        // Last round → Completed
+        // Last round → Completed: celebrate completion
         _currentPhase = WorkoutPhase.completed;
         _secondsRemaining = 0;
         _phaseDuration = 0;
@@ -168,10 +141,8 @@ class TimerViewModel with ChangeNotifier {
         _isTransitioning = false;
         notifyListeners();
       } else {
-        // More rounds → Rest
-        if (workoutSeconds < 3) {
-          audioService.speakRest();
-        }
+        // More rounds → Rest: play "Rest!" right on the transition
+        audioService.playRest();
         vibrationService.vibrateRestStart();
         _currentPhase = WorkoutPhase.rest;
         _phaseDuration = restSeconds;
@@ -181,10 +152,8 @@ class TimerViewModel with ChangeNotifier {
       }
 
     } else if (_currentPhase == WorkoutPhase.rest) {
-      // Rest → Workout (next round)
-      if (restSeconds < 3) {
-        audioService.speakGo();
-      }
+      // Rest → Workout (next round): play "Go!" right on the transition
+      audioService.playGo();
       if (settingsViewModel.settings.countdownVibration) {
         vibrationService.vibrateImpact();
       }
@@ -216,7 +185,6 @@ class TimerViewModel with ChangeNotifier {
     _timer?.cancel();
     _phaseStopwatch.reset();
     _lastCuedSecond = -1;
-    _countdownAudioTriggered = false;
     audioService.stopSpeaking();
     _isTransitioning = false;
     _secondsRemaining = 0;
@@ -230,7 +198,6 @@ class TimerViewModel with ChangeNotifier {
     _timer?.cancel();
     _phaseStopwatch.reset();
     _lastCuedSecond = -1;
-    _countdownAudioTriggered = false;
     _isTransitioning = false;
 
     // Silence any leftover speech or audio

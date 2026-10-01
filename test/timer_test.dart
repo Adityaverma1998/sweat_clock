@@ -12,12 +12,30 @@ class MockAudioService implements AudioService {
   int playBeepCallCount = 0;
   int playGoCountdownCallCount = 0;
   int playRestCountdownCallCount = 0;
+  int playGoCallCount = 0;
+  int playRestCallCount = 0;
+  List<int> countdownTicks = [];
 
   @override
   void updateEnabled(bool enabled) {}
 
   @override
   Future<void> updateLanguage(String languageName) async {}
+
+  @override
+  Future<void> playCountdownTick(int second) async {
+    countdownTicks.add(second);
+  }
+
+  @override
+  Future<void> playGo() async {
+    playGoCallCount++;
+  }
+
+  @override
+  Future<void> playRest() async {
+    playRestCallCount++;
+  }
 
   @override
   Future<void> playGoCountdown() async {
@@ -223,7 +241,8 @@ void main() {
   });
 
   group('Workout Timer - Audio Cue & Timing Synchronization', () {
-    test('Prep phase triggers playGoCountdown when 3 seconds remain', () async {
+    test('Prep phase triggers playCountdownTick(3) immediately when 3 seconds remain', () async {
+      mockAudioService.countdownTicks.clear();
       final workoutVm = TimerViewModel(
         prepSeconds: 3,
         workoutSeconds: 5,
@@ -235,16 +254,17 @@ void main() {
       );
 
       workoutVm.startTimer();
-      // Tick 1 (100ms) will immediately detect remaining <= 3 and trigger playGoCountdown once
+      // Tick 1 (100ms) will immediately detect remaining == 3 and trigger playCountdownTick(3)
       await Future.delayed(const Duration(milliseconds: 250));
 
-      expect(mockAudioService.playGoCountdownCallCount, equals(1));
+      expect(mockAudioService.countdownTicks, contains(3));
       expect(workoutVm.currentPhase, equals(WorkoutPhase.prep));
 
       workoutVm.dispose();
     });
 
-    test('Workout phase triggers playRestCountdown when 3 seconds remain if more rounds left', () async {
+    test('Workout phase triggers playCountdownTick(3) when 3 seconds remain', () async {
+      mockAudioService.countdownTicks.clear();
       final workoutVm = TimerViewModel(
         prepSeconds: 0,
         workoutSeconds: 3,
@@ -256,10 +276,32 @@ void main() {
       );
 
       workoutVm.startTimer();
-      // 0 prep means it starts in workout. At 3s remaining, triggers playRestCountdown once
+      // 0 prep means it starts in workout. At 3s remaining, triggers playCountdownTick(3)
       await Future.delayed(const Duration(milliseconds: 250));
 
-      expect(mockAudioService.playRestCountdownCallCount, equals(1));
+      expect(mockAudioService.countdownTicks, contains(3));
+      expect(workoutVm.currentPhase, equals(WorkoutPhase.workout));
+
+      workoutVm.dispose();
+    });
+
+    test('Phase transition from Prep to Workout triggers playGo()', () async {
+      mockAudioService.playGoCallCount = 0;
+      final workoutVm = TimerViewModel(
+        prepSeconds: 1,
+        workoutSeconds: 5,
+        restSeconds: 3,
+        totalRounds: 2,
+        settingsViewModel: settingsViewModel,
+        audioService: mockAudioService,
+        vibrationService: mockVibrationService,
+      );
+
+      workoutVm.startTimer();
+      // Wait for 1 second prep to elapse and transition to workout
+      await Future.delayed(const Duration(milliseconds: 1200));
+
+      expect(mockAudioService.playGoCallCount, greaterThanOrEqualTo(1));
       expect(workoutVm.currentPhase, equals(WorkoutPhase.workout));
 
       workoutVm.dispose();

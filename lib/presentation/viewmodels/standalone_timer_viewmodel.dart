@@ -37,6 +37,9 @@ class StandaloneTimerViewModel with ChangeNotifier, WidgetsBindingObserver {
   /// Internal ticker running at 100ms for smooth UI
   Timer? _ticker;
 
+  /// Tracks last cued second for countdown audio/vibration feedback
+  int _lastCuedSecond = -1;
+
   StandaloneTimerViewModel({
     required this.settingsViewModel,
     required this.audioService,
@@ -147,6 +150,7 @@ class StandaloneTimerViewModel with ChangeNotifier, WidgetsBindingObserver {
 
     if (_status == StandaloneTimerStatus.completed || _status == StandaloneTimerStatus.idle) {
       _accumulatedDuration = Duration.zero;
+      _lastCuedSecond = -1;
     }
 
     _startTimestamp = DateTime.now();
@@ -184,6 +188,7 @@ class StandaloneTimerViewModel with ChangeNotifier, WidgetsBindingObserver {
     _stopTicker();
     _startTimestamp = null;
     _accumulatedDuration = Duration.zero;
+    _lastCuedSecond = -1;
     _status = StandaloneTimerStatus.idle;
     vibrationService.vibrateAction();
     notifyListeners();
@@ -201,6 +206,16 @@ class StandaloneTimerViewModel with ChangeNotifier, WidgetsBindingObserver {
         if (remaining == Duration.zero) {
           _onCountdownComplete();
           return;
+        }
+        final remSec = remaining.inSeconds;
+        if (remSec >= 1 && remSec <= 3 && remSec != _lastCuedSecond) {
+          _lastCuedSecond = remSec;
+          if (settingsViewModel.soundEffects) {
+            audioService.playCountdownTick(remSec);
+          }
+          if (settingsViewModel.vibration) {
+            vibrationService.vibrate();
+          }
         }
       }
       notifyListeners();

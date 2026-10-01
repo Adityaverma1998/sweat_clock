@@ -104,6 +104,7 @@ class AudioService {
   Future<void> _initAudio() async {
     try {
       await _player.setReleaseMode(ReleaseMode.stop);
+      await _player.setPlayerMode(PlayerMode.lowLatency);
       await AudioPlayer.global.setAudioContext(
         AudioContextConfig(
           focus: AudioContextConfigFocus.duckOthers,
@@ -147,7 +148,7 @@ class AudioService {
     if (!_enabled) return;
     try {
       await _player.stop();
-      await _player.play(AssetSource(path));
+      await _player.play(AssetSource(path), mode: PlayerMode.lowLatency);
     } catch (e) {
       debugPrint("Asset play failed for '$path': $e. Falling back to TTS.");
       if (ttsKey != null) {
@@ -169,38 +170,48 @@ class AudioService {
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // WORKOUT CUES
+  // WORKOUT CUES (Discrete per-second and phase transition cues)
   // ─────────────────────────────────────────────────────────────────────────
-  /// Plays the full "3, 2, 1, Go!" countdown audio cue (assets/audios/go.mp3).
-  /// Starting this when 3 seconds remain perfectly synchronizes "3, 2, 1" with
-  /// the countdown clock and concludes with "Go!" right as the Workout phase starts.
-  Future<void> playGoCountdown() async {
+
+  /// Plays the countdown cue for a single second (3, 2, or 1) instantly.
+  /// Zero-latency trimmed audio with speech onset at ~60ms ensures perfect
+  /// synchronization with each second ticking on screen.
+  Future<void> playCountdownTick(int second) async {
     if (!_enabled) return;
-    await _playAsset('audios/go.mp3', ttsKey: 'go');
+    final key = second.toString();
+    if (_langCode == 'en') {
+      await _playAsset('audio/en/$key.mp3', ttsKey: key);
+    } else {
+      await _speakTts(key);
+    }
   }
 
-  /// Plays the full "3, 2, 1, Rest!" countdown audio cue (assets/audios/rest.mp3).
-  /// Starting this when 3 seconds remain perfectly synchronizes "3, 2, 1" with
-  /// the countdown clock and concludes with "Rest!" right as the Rest phase starts.
-  Future<void> playRestCountdown() async {
+  /// Plays "Go!" immediately when the Workout phase begins.
+  Future<void> playGo() async {
     if (!_enabled) return;
-    await _playAsset('audios/rest.mp3', ttsKey: 'rest');
+    if (_langCode == 'en') {
+      await _playAsset('audios/go_cue.mp3', ttsKey: 'go');
+    } else {
+      await _speakTts('go');
+    }
   }
 
-  Future<void> speakTick(String number) async {
+  /// Plays "Rest!" immediately when the Rest phase begins.
+  Future<void> playRest() async {
     if (!_enabled) return;
-    await _playAsset('audio/$_langCode/$number.mp3', ttsKey: number);
+    if (_langCode == 'en') {
+      await _playAsset('audios/rest_cue.mp3', ttsKey: 'rest');
+    } else {
+      await _speakTts('rest');
+    }
   }
 
-  Future<void> speakGo() async {
-    if (!_enabled) return;
-    await _playAsset('audios/go.mp3', ttsKey: 'go');
-  }
-
-  Future<void> speakRest() async {
-    if (!_enabled) return;
-    await _playAsset('audios/rest.mp3', ttsKey: 'rest');
-  }
+  /// Backwards-compatibility aliases
+  Future<void> playGoCountdown() => playCountdownTick(3);
+  Future<void> playRestCountdown() => playCountdownTick(3);
+  Future<void> speakTick(String number) => playCountdownTick(int.tryParse(number) ?? 1);
+  Future<void> speakGo() => playGo();
+  Future<void> speakRest() => playRest();
 
   Future<void> speakCongrats() async {
     if (!_enabled) return;
@@ -221,7 +232,11 @@ class AudioService {
 
   Future<void> playBeep() async {
     if (!_enabled) return;
-    await _playAsset('audio/$_langCode/1.mp3', ttsKey: '1');
+    if (_langCode == 'en') {
+      await _playAsset('audio/en/1.mp3', ttsKey: '1');
+    } else {
+      await _speakTts('1');
+    }
   }
 
   Future<void> stop() => stopSpeaking();
