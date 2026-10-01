@@ -4,12 +4,16 @@ import '../../domain/entities/user_settings.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../../data/models/user_settings_model.dart';
 
+import '../../data/services/audio_service.dart';
+
 class SettingsViewModel with ChangeNotifier {
   final SettingsRepository _repository;
+  final AudioService? _audioService;
   UserSettings _settings = UserSettingsModel.defaultSettings();
   bool _isInitialized = false;
 
-  SettingsViewModel(this._repository) {
+  SettingsViewModel(this._repository, {AudioService? audioService})
+      : _audioService = audioService {
     _loadSettings();
   }
 
@@ -32,6 +36,7 @@ class SettingsViewModel with ChangeNotifier {
   Future<void> _loadSettings() async {
     _settings = await _repository.getSettings();
     _applyWakelock(_settings.keepScreenOn);
+    _audioService?.updateLanguage(_settings.language);
     _isInitialized = true;
     notifyListeners();
   }
@@ -40,6 +45,7 @@ class SettingsViewModel with ChangeNotifier {
     _settings = newSettings;
     await _repository.saveSettings(_settings);
     _applyWakelock(_settings.keepScreenOn);
+    _audioService?.updateLanguage(_settings.language);
     notifyListeners();
   }
 

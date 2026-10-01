@@ -18,19 +18,19 @@ void showTimePickerBottomSheet(BuildContext context, String timerType) {
     selectedMin = homeViewModel.prepMinutes;
     selectedSec = homeViewModel.prepSeconds;
     titleKey = 'preparation';
-    description = 'Set how long before each round starts';
+    description = context.translate('prep_desc');
     icon = '⏳';
   } else if (timerType == "workout") {
     selectedMin = homeViewModel.workoutMinutes;
     selectedSec = homeViewModel.workoutSeconds;
     titleKey = 'workout';
-    description = 'Set work interval duration';
+    description = context.translate('work_desc');
     icon = '🔥';
   } else {
     selectedMin = homeViewModel.restMinutes;
     selectedSec = homeViewModel.restSeconds;
     titleKey = 'rest';
-    description = 'Set rest interval between rounds';
+    description = context.translate('rest_desc');
     icon = '🧘';
   }
 
@@ -231,7 +231,7 @@ class _TimePickerSheetState extends State<_TimePickerSheet> {
               child: Column(
                 children: [
                   Text(
-                    'PREVIEW',
+                    context.translate('preview'),
                     style: TextStyle(
                       fontSize: 10,
                       letterSpacing: 1.5,

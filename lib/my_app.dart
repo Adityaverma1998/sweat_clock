@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<SettingsViewModel>(
           create: (context) => SettingsViewModel(
             context.read<SettingsRepository>(),
+            audioService: context.read<AudioService>(),
           ),
         ),
         ChangeNotifierProvider<HomeViewModel>(
@@ -102,22 +103,29 @@ class MyApp extends StatelessWidget {
   }
 
   Locale _getLocale(String languageName) {
-    switch (languageName.toLowerCase()) {
+    switch (languageName.toLowerCase().trim()) {
+      case 'es':
       case 'español':
       case 'spanish':
         return const Locale('es');
+      case 'fr':
       case 'français':
+      case 'francais':
       case 'french':
         return const Locale('fr');
+      case 'de':
       case 'deutsch':
       case 'german':
         return const Locale('de');
+      case 'ja':
       case '日本語':
       case 'japanese':
         return const Locale('ja');
+      case 'hi':
       case 'hindi':
       case 'हिन्दी':
         return const Locale('hi');
+      case 'en':
       case 'english':
       default:
         return const Locale('en');

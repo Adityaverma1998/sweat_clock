@@ -204,7 +204,11 @@ class AudioService {
 
   Future<void> speakCongrats() async {
     if (!_enabled) return;
-    await _playAsset('audios/congrat.mp3', ttsKey: 'congrats');
+    if (_langCode == 'en') {
+      await _playAsset('audios/congrat.mp3', ttsKey: 'congrats');
+    } else {
+      await _speakTts('congrats');
+    }
   }
 
   // ─────────────────────────────────────────────────────────────────────────

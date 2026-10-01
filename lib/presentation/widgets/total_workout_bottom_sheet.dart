@@ -80,7 +80,7 @@ class _RoundSelectorSheetState extends State<_RoundSelectorSheet> {
             ),
             const SizedBox(height: 3),
             Text(
-              'Choose your workout intensity',
+              context.translate('choose_intensity'),
               style: TextStyle(fontSize: 12, color: context.textMuted),
             ),
             const SizedBox(height: 20),

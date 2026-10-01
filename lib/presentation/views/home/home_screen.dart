@@ -215,9 +215,9 @@ class _HomeScreenState extends State<HomeScreen> {
               letterSpacing: 0.3,
             ),
             children: [
-              const TextSpan(text: "Ready to crush it? "),
+              TextSpan(text: "${context.translate('ready_to_crush')} "),
               TextSpan(
-                text: "Let's go! 🔥",
+                text: context.translate('lets_go'),
                 style: TextStyle(
                   color: context.accent,
                   fontWeight: FontWeight.bold,
@@ -306,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            preset.name,
+                            preset.getLocalizedName(context),
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -314,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            preset.subtitle,
+                            preset.getLocalizedSubtitle(context),
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
@@ -439,7 +439,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "SESSION TIMELINE",
+            context.translate('session_timeline'),
             style: TextStyle(
               fontSize: 10,
               letterSpacing: 1.5,

@@ -95,11 +95,11 @@ class _StandaloneTimerScreenState extends State<StandaloneTimerScreen>
             IconButton(
               icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimary, size: 20),
               onPressed: () => Navigator.maybePop(context),
-              tooltip: 'Back',
+              tooltip: context.translate('back'),
             ),
             const SizedBox(width: 8),
             Text(
-              'Timer',
+              context.translate('timer_title'),
               style: TextStyle(
                 color: context.textPrimary,
                 fontSize: 22,

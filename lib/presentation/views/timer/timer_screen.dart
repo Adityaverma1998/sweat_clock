@@ -214,22 +214,23 @@ class TimerScreen extends StatelessWidget {
     String nextVal = '';
     Color nextColor = Colors.transparent;
 
+    final nextPrefix = context.translate('next');
     if (viewModel.currentPhase == WorkoutPhase.prep) {
-      nextLabel = 'Next: ${context.translate('workout')}';
+      nextLabel = '$nextPrefix: ${context.translate('workout')}';
       nextVal = _formatDuration(viewModel.workoutSeconds);
       nextColor = context.workout;
     } else if (viewModel.currentPhase == WorkoutPhase.workout) {
       if (viewModel.currentRound < viewModel.totalRounds) {
-        nextLabel = 'Next: ${context.translate('rest')}';
+        nextLabel = '$nextPrefix: ${context.translate('rest')}';
         nextVal = _formatDuration(viewModel.restSeconds);
         nextColor = context.rest;
       } else {
-        nextLabel = 'Next: Finish';
+        nextLabel = '$nextPrefix: ${context.translate('finish')}';
         nextVal = '--:--';
         nextColor = context.accentLight;
       }
     } else if (viewModel.currentPhase == WorkoutPhase.rest) {
-      nextLabel = 'Next: ${context.translate('workout')}';
+      nextLabel = '$nextPrefix: ${context.translate('workout')}';
       nextVal = _formatDuration(viewModel.workoutSeconds);
       nextColor = context.workout;
     }
@@ -250,7 +251,7 @@ class TimerScreen extends StatelessWidget {
           Expanded(
             child: _buildNextBox(
               context,
-              label: 'Round ${viewModel.currentRound + 1}',
+              label: '${context.translate('round_label')} ${viewModel.currentRound + 1}',
               value: viewModel.currentRound < viewModel.totalRounds
                   ? _formatDuration(viewModel.workoutSeconds)
                   : '--:--',

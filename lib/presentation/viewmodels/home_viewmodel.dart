@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/localization/localization_ext.dart';
 
 enum WorkoutPresetType {
   hiit,
@@ -33,6 +34,33 @@ class WorkoutPreset {
     required this.restSeconds,
     required this.rounds,
   });
+
+  String getLocalizedName(BuildContext context) {
+    switch (type) {
+      case WorkoutPresetType.hiit:
+        return 'HIIT 40/20';
+      case WorkoutPresetType.boxing:
+        return context.translate('preset_boxing');
+      case WorkoutPresetType.emom:
+        return 'EMOM';
+      case WorkoutPresetType.custom:
+        return context.translate('stage');
+    }
+  }
+
+  String getLocalizedSubtitle(BuildContext context) {
+    final rds = context.translate('rounds_short');
+    switch (type) {
+      case WorkoutPresetType.hiit:
+        return '40s/20s • 5 $rds';
+      case WorkoutPresetType.boxing:
+        return '3m/1m • 3 $rds';
+      case WorkoutPresetType.emom:
+        return '50s/10s • 10 $rds';
+      case WorkoutPresetType.custom:
+        return '';
+    }
+  }
 }
 
 class HomeViewModel with ChangeNotifier {

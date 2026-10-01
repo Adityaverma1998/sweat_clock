@@ -259,7 +259,7 @@ class _CongratulationScreenState extends State<CongratulationScreen>
         ),
         const SizedBox(height: 24),
         Text(
-          'WORKOUT\nCOMPLETE!',
+          context.translate('workout_complete'),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 32,
@@ -270,7 +270,7 @@ class _CongratulationScreenState extends State<CongratulationScreen>
         ),
         const SizedBox(height: 8),
         Text(
-          "You crushed all rounds!\nYou're absolutely unstoppable 💪",
+          context.translate('workout_complete_sub'),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 12,
@@ -296,7 +296,7 @@ class _CongratulationScreenState extends State<CongratulationScreen>
           const Text('🔥', style: TextStyle(fontSize: 14)),
           const SizedBox(width: 8),
           Text(
-            "3-day streak — you're on fire!",
+            context.translate('streak_banner'),
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
@@ -338,7 +338,7 @@ class _CongratulationScreenState extends State<CongratulationScreen>
                           size: 16, color: context.textSecondary),
                       const SizedBox(width: 6),
                       Text(
-                        "Share",
+                        context.translate('share'),
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -368,14 +368,14 @@ class _CongratulationScreenState extends State<CongratulationScreen>
                 borderRadius: BorderRadius.circular(14),
               ),
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.play_arrow_rounded, size: 18),
-                SizedBox(width: 6),
+                const Icon(Icons.play_arrow_rounded, size: 18),
+                const SizedBox(width: 6),
                 Text(
-                  "Go Again",
-                  style: TextStyle(
+                  context.translate('go_again'),
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
@@ -404,7 +404,7 @@ class _CongratulationScreenState extends State<CongratulationScreen>
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(file.path, mimeType: 'image/png')],
-          text: '🏆 Workout Complete! Crushed it with SweatClock 💪 #SweatClock #Fitness #WorkoutDone',
+          text: context.translate('share_text'),
         ),
       );
     } catch (e) {
